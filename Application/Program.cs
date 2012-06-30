@@ -4,6 +4,9 @@ using System.Windows.Forms;
 
 namespace ComputerTimeTracker
 {
+  /// <summary>
+  /// The class that contains the application main entry point.
+  /// </summary>
   static class Program
   {
     /// <summary>

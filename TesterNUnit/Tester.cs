@@ -7,9 +7,15 @@ using ComputerTimeTracker;
 
 namespace TesterNUnit
 {
+  /// <summary>
+  /// The class that contains all the NUnit tests.
+  /// </summary>
   [TestFixture]
   public class Tester
   {
+    /// <summary>
+    /// Initialization method called before every test method.
+    /// </summary>
     [SetUp]
     public void Init()
     {
