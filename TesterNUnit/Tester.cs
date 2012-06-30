@@ -41,6 +41,8 @@ namespace TesterNUnit
       TimeTracker tracker = new TimeTracker(now);
       Console.WriteLine("Checking start time " + now);
       Assert.That(tracker.StartTime, Is.EqualTo(now));
+      Assert.That(tracker.Events[0].Time, Is.EqualTo(now));
+      Assert.That(tracker.Events[0].Type, Is.EqualTo(TrackableEvent.EventType.Start));
     }
 
     /// <summary>

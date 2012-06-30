@@ -29,6 +29,7 @@ namespace ComputerTimeTracker
     {
       _startTime = startTime;
       _events = new List<TrackableEvent>();
+      _events.Add(new TrackableEvent(TrackableEvent.EventType.Start, startTime));
     }
   }
 }

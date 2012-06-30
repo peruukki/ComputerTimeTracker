@@ -15,6 +15,11 @@ namespace ComputerTimeTracker
     public enum EventType
     {
       /// <summary>
+      /// Time tracking started.
+      /// </summary>
+      Start,
+
+      /// <summary>
       /// The computer is locked.
       /// </summary>
       Lock,
