@@ -20,10 +20,10 @@ namespace ComputerTimeTracker
     private DateTime _startTime;
 
     /// <summary>
-    /// The number of events added to the tracker.
+    /// The events tracked by the tracker.
     /// </summary>
-    public int EventCount { get { return _eventCount; } }
-    private int _eventCount;
+    public IList<TrackableEvent> Events { get { return _events; } }
+    private IList<TrackableEvent> _events;
 
     /// <summary>
     /// Creates a TimeTracker instance.
@@ -32,15 +32,7 @@ namespace ComputerTimeTracker
     public TimeTracker(DateTime startTime)
     {
       StartTime = startTime;
-    }
-
-    /// <summary>
-    /// Addes the given event to the tracker.
-    /// </summary>
-    /// <param name="trackEvent">A trackable event.</param>
-    public void AddEvent(TrackableEvent trackEvent)
-    {
-      _eventCount++;
+      _events = new List<TrackableEvent>();
     }
   }
 }

@@ -56,13 +56,13 @@ namespace TesterNUnit
 
       Console.WriteLine("Adding Lock after 5 minutes");
       time = time.AddMinutes(5);
-      tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Lock, time));
-      Assert.That(tracker.EventCount, Is.EqualTo(++eventCount));
+      tracker.Events.Add(new TrackableEvent(TrackableEvent.EventType.Lock, time));
+      Assert.That(tracker.Events.Count, Is.EqualTo(++eventCount));
 
       Console.WriteLine("Adding Unlock after 1 hour");
       time = time.AddHours(1);
-      tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Unlock, time));
-      Assert.That(tracker.EventCount, Is.EqualTo(++eventCount));
+      tracker.Events.Add(new TrackableEvent(TrackableEvent.EventType.Unlock, time));
+      Assert.That(tracker.Events.Count, Is.EqualTo(++eventCount));
     }
   }
 }
