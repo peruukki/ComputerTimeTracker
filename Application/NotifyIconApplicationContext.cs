@@ -9,7 +9,7 @@ namespace ComputerTimeTracker
   /// An application context that displays a notification area icon
   /// instead of the main form at startup.
   /// </summary>
-  public class CustomApplicationContext : ApplicationContext
+  public class NotifyIconApplicationContext : ApplicationContext
   {
     private TimeReport _reportForm;
     private NotifyIcon _notifyIcon;
@@ -18,7 +18,7 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Creates a new CustomApplicationContext instance.
     /// </summary>
-    public CustomApplicationContext()
+    public NotifyIconApplicationContext()
     {
       _reportForm = new TimeReport();
       _components = new Container();

@@ -28,7 +28,7 @@ namespace TesterNUnit
     [Test]
     public void RunApplication()
     {
-      new CustomApplicationContext().Exit();
+      new NotifyIconApplicationContext().Exit();
     }
 
     /// <summary>

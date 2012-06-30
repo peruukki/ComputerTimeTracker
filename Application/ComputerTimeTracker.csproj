@@ -36,7 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomApplicationContext.cs" />
+    <Compile Include="NotifyIconApplicationContext.cs" />
     <Compile Include="TimeReport.cs">
       <SubType>Form</SubType>
     </Compile>
