@@ -17,7 +17,6 @@ namespace ComputerTimeTracker
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      //Application.Run(new TimeReport());
       Application.Run(new CustomApplicationContext());
     }
   }

@@ -11,8 +11,8 @@ namespace ComputerTimeTracker
   /// </summary>
   public class CustomApplicationContext : ApplicationContext
   {
-    private NotifyIcon _notifyIcon;
     private TimeReport _reportForm;
+    private NotifyIcon _notifyIcon;
     private IContainer _components;
 
     /// <summary>
@@ -22,6 +22,7 @@ namespace ComputerTimeTracker
     {
       _reportForm = new TimeReport();
       _components = new Container();
+
       _notifyIcon = CreateNotifyIcon(_components);
       _notifyIcon.ContextMenu = CreateNotifyIconContextMenu();
     }
