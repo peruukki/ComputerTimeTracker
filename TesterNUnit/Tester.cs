@@ -43,5 +43,20 @@ namespace TesterNUnit
       tracker.StartTime = now;
       Assert.That(tracker.StartTime, Is.EqualTo(now));
     }
+
+    /// <summary>
+    /// Adds events to the tracker and checks their validity from the tracker.
+    /// </summary>
+    [Test]
+    public void AddEvents()
+    {
+      DateTime time = DateTime.Now;
+      TimeTracker tracker = new TimeTracker(time);
+
+      Console.WriteLine("Adding Lock after 5 minutes");
+      time = time.AddMinutes(5);
+      tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Lock, time));
+      Assert.That(tracker.EventCount, Is.EqualTo(1));
+    }
   }
 }
