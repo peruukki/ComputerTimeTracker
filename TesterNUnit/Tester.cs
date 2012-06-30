@@ -40,7 +40,6 @@ namespace TesterNUnit
       DateTime now = DateTime.Now;
       TimeTracker tracker = new TimeTracker(now);
       Console.WriteLine("Checking start time " + now);
-      tracker.StartTime = now;
       Assert.That(tracker.StartTime, Is.EqualTo(now));
     }
 

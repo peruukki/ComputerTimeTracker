@@ -10,17 +10,13 @@ namespace ComputerTimeTracker
   public class TimeTracker
   {
     /// <summary>
-    /// Computer usage start time.
+    /// Gets the computer usage start time.
     /// </summary>
-    public DateTime StartTime
-    {
-      get { return _startTime; }
-      set { _startTime = value; }
-    }
+    public DateTime StartTime { get { return _startTime; } }
     private DateTime _startTime;
 
     /// <summary>
-    /// The events tracked by the tracker.
+    /// Gets the events tracked by the tracker.
     /// </summary>
     public IList<TrackableEvent> Events { get { return _events; } }
     private IList<TrackableEvent> _events;
@@ -31,7 +27,7 @@ namespace ComputerTimeTracker
     /// <param name="startTime">Computer usage start time.</param>
     public TimeTracker(DateTime startTime)
     {
-      StartTime = startTime;
+      _startTime = startTime;
       _events = new List<TrackableEvent>();
     }
   }
