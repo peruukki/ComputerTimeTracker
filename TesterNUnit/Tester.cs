@@ -24,5 +24,18 @@ namespace TesterNUnit
     {
       new CustomApplicationContext().Exit();
     }
+
+    /// <summary>
+    /// Checks that the tracker start time is as expected.
+    /// </summary>
+    [Test]
+    public void CheckStartTime()
+    {
+      DateTime now = DateTime.Now;
+      TimeTracker tracker = new TimeTracker(now);
+      Console.WriteLine("Checking start time " + now);
+      tracker.StartTime = now;
+      Assert.That(tracker.StartTime, Is.EqualTo(now));
+    }
   }
 }
