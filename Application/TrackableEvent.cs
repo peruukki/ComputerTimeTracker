@@ -17,7 +17,12 @@ namespace ComputerTimeTracker
       /// <summary>
       /// The computer is locked.
       /// </summary>
-      Lock
+      Lock,
+
+      /// <summary>
+      /// The computer is unlocked.
+      /// </summary>
+      Unlock,
     }
 
     /// <summary>

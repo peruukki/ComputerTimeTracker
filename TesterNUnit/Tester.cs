@@ -52,11 +52,17 @@ namespace TesterNUnit
     {
       DateTime time = DateTime.Now;
       TimeTracker tracker = new TimeTracker(time);
+      int eventCount = 0;
 
       Console.WriteLine("Adding Lock after 5 minutes");
       time = time.AddMinutes(5);
       tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Lock, time));
-      Assert.That(tracker.EventCount, Is.EqualTo(1));
+      Assert.That(tracker.EventCount, Is.EqualTo(++eventCount));
+
+      Console.WriteLine("Adding Unlock after 1 hour");
+      time = time.AddHours(1);
+      tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Unlock, time));
+      Assert.That(tracker.EventCount, Is.EqualTo(++eventCount));
     }
   }
 }
