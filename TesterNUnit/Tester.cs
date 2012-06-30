@@ -51,19 +51,33 @@ namespace TesterNUnit
     [Test]
     public void AddEvents()
     {
-      DateTime time = DateTime.Now;
-      TimeTracker tracker = new TimeTracker(time);
-      int eventCount = 0;
+      TimeTracker tracker = new TimeTracker(DateTime.Now);
+      AddEvent(tracker, TrackableEvent.EventType.Lock, new TimeSpan(0, 5, 0));
+      AddEvent(tracker, TrackableEvent.EventType.Unlock, new TimeSpan(1, 5, 0));
+    }
 
-      Console.WriteLine("Adding Lock after 5 minutes");
-      time = time.AddMinutes(5);
-      tracker.Events.Add(new TrackableEvent(TrackableEvent.EventType.Lock, time));
-      Assert.That(tracker.Events.Count, Is.EqualTo(++eventCount));
+    /// <summary>
+    /// Adds a trackable event to the tracker and verifies that it matches the
+    /// last event in the tracker.
+    /// </summary>
+    /// <param name="tracker">Time tracker to test.</param>
+    /// <param name="type">Type of event to add.</param>
+    /// <param name="delay">Delay of the new event since the previous event.</param>
+    private void AddEvent(TimeTracker tracker,
+                          TrackableEvent.EventType type, TimeSpan delay)
+    {
+      Console.WriteLine(String.Format("Adding {0} after {1}", type, delay));
 
-      Console.WriteLine("Adding Unlock after 1 hour");
-      time = time.AddHours(1);
-      tracker.Events.Add(new TrackableEvent(TrackableEvent.EventType.Unlock, time));
+      // Add delay to last event time
+      int eventCount = tracker.Events.Count;
+      DateTime time = tracker.Events[eventCount - 1].Time.Add(delay);
+
+      // Add and verify the event
+      tracker.Events.Add(new TrackableEvent(type, time));
       Assert.That(tracker.Events.Count, Is.EqualTo(++eventCount));
+      TrackableEvent lastEvent = tracker.Events[tracker.Events.Count - 1];
+      Assert.That(lastEvent.Type, Is.EqualTo(type));
+      Assert.That(lastEvent.Time, Is.EqualTo(time));
     }
   }
 }
