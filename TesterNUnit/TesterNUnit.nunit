@@ -1,0 +1,9 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" appbase="E:\Projects\C#\ComputerTimeTracker\Application\bin\Debug" configfile="ComputerTimeTracker.exe.config" binpathtype="Auto">
+    <assembly path="..\..\..\TesterNUnit\bin\Debug\TesterNUnit.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="bin\Release\TesterNUnit.dll" />
+  </Config>
+</NUnitProject>

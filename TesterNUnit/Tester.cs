@@ -28,7 +28,7 @@ namespace TesterNUnit
     [Test]
     public void RunApplication()
     {
-      new NotifyIconApplicationContext().Exit();
+      new NotifyIconApplicationContext(DateTime.Now).Exit();
     }
 
     /// <summary>
@@ -43,6 +43,30 @@ namespace TesterNUnit
       Assert.That(tracker.StartTime, Is.EqualTo(now));
       Assert.That(tracker.Events[0].Time, Is.EqualTo(now));
       Assert.That(tracker.Events[0].Type, Is.EqualTo(TrackableEvent.EventType.Start));
+    }
+
+    /// <summary>
+    /// Checks that the time tracker start time remains unchanged after
+    /// application restart during the same day.
+    /// </summary>
+    [Test]
+    public void CheckStartTimeAfterRestartDuringSameDay()
+    {
+      DateTime launchTime = new DateTime(2012, 1, 1, 1, 1, 1);
+
+      // Run the application
+      NotifyIconApplicationContext context = new NotifyIconApplicationContext(launchTime);
+      DateTime startTimeFirst = context.TimeTracker.StartTime;
+      context.Exit();
+
+      // Run the application again
+      context = new NotifyIconApplicationContext(launchTime.AddSeconds(1));
+      DateTime startTimeSecond = context.TimeTracker.StartTime;
+      context.Exit();
+
+      Console.WriteLine(String.Format("Comparing start times {0} and {1} ",
+                                      startTimeFirst, startTimeSecond));
+      Assert.That(startTimeFirst, Is.EqualTo(startTimeSecond));
     }
 
     /// <summary>

@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Drawing;
+using ComputerTimeTracker.Properties;
 
 namespace ComputerTimeTracker
 {
@@ -11,6 +12,9 @@ namespace ComputerTimeTracker
   /// </summary>
   public class NotifyIconApplicationContext : ApplicationContext
   {
+    public TimeTracker TimeTracker { get { return _timeTracker; } }
+    private TimeTracker _timeTracker;
+
     private TimeReport _reportForm;
     private NotifyIcon _notifyIcon;
     private IContainer _components;
@@ -18,13 +22,34 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Creates a new CustomApplicationContext instance.
     /// </summary>
-    public NotifyIconApplicationContext()
+    public NotifyIconApplicationContext(DateTime appLaunchTime)
     {
+      _timeTracker = new TimeTracker(UpdateTimeTrackerStartTime(appLaunchTime));
       _reportForm = new TimeReport();
       _components = new Container();
 
       _notifyIcon = CreateNotifyIcon(_components);
       _notifyIcon.ContextMenu = CreateNotifyIconContextMenu();
+    }
+
+    /// <summary>
+    /// Updates the time tracker start time in the application settings
+    /// if necessary and returns its current value.
+    /// </summary>
+    /// <param name="appLaunchTime">Current application launch time.</param>
+    /// <returns>Up-to-date time tracker start time.</returns>
+    private DateTime UpdateTimeTrackerStartTime(DateTime appLaunchTime)
+    {
+      DateTime startTime = Settings.Default.TimeTrackerStartTime;
+      if (startTime.Date != appLaunchTime.Date)
+      {
+        // Update the existing start time if this is the first time the application
+        // has been launched today
+        startTime = appLaunchTime;
+        Settings.Default.TimeTrackerStartTime = startTime;
+        Settings.Default.Save();
+      }
+      return startTime;
     }
 
     /// <summary>
