@@ -46,27 +46,33 @@ namespace TesterNUnit
     }
 
     /// <summary>
-    /// Checks that the time tracker start time remains unchanged after
-    /// application restart during the same day.
+    /// Checks that the time tracker start time is valid after application restarts.
     /// </summary>
     [Test]
-    public void CheckStartTimeAfterRestartDuringSameDay()
+    public void CheckStartTimeAfterRestarts()
     {
-      DateTime launchTime = new DateTime(2012, 1, 1, 1, 1, 1);
+      DateTime launchTime1 = new DateTime(2012, 1, 1, 1, 1, 1);
 
-      // Run the application
-      NotifyIconApplicationContext context = new NotifyIconApplicationContext(launchTime);
-      DateTime startTimeFirst = context.TimeTracker.StartTime;
+      // Run the application, forcing the start time to be updated
+      Console.WriteLine("Launching application at " + launchTime1);
+      NotifyIconApplicationContext context =
+        new NotifyIconApplicationContext(launchTime1, true);
+      Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
       context.Exit();
 
-      // Run the application again
-      context = new NotifyIconApplicationContext(launchTime.AddSeconds(1));
-      DateTime startTimeSecond = context.TimeTracker.StartTime;
+      // Run the application again on the same day
+      DateTime launchTime2 = launchTime1.AddMinutes(1);
+      Console.WriteLine("Launching application at " + launchTime2);
+      context = new NotifyIconApplicationContext(launchTime2);
+      Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
       context.Exit();
 
-      Console.WriteLine(String.Format("Comparing start times {0} and {1} ",
-                                      startTimeFirst, startTimeSecond));
-      Assert.That(startTimeFirst, Is.EqualTo(startTimeSecond));
+      // Run the application again on the next day
+      DateTime launchTime3 = launchTime1.AddDays(1);
+      Console.WriteLine("Launching application at " + launchTime3);
+      context = new NotifyIconApplicationContext(launchTime3);
+      Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime3));
+      context.Exit();
     }
 
     /// <summary>

@@ -22,9 +22,25 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Creates a new CustomApplicationContext instance.
     /// </summary>
+    /// <param name="appLaunchTime">Application launch time.</param>
     public NotifyIconApplicationContext(DateTime appLaunchTime)
+      : this(appLaunchTime, false)
     {
-      _timeTracker = new TimeTracker(UpdateTimeTrackerStartTime(appLaunchTime));
+    }
+
+    /// <summary>
+    /// Creates a new CustomApplicationContext instance, possibly forcing
+    /// update of the time tracker start time.
+    /// </summary>
+    /// <param name="appLaunchTime">Application launch time.</param>
+    /// <param name="forceUpdateStartTime">Whether time tracker start time is
+    /// forcefully updated to the application launch time.</param>
+    public NotifyIconApplicationContext(DateTime appLaunchTime,
+                                        bool forceUpdateStartTime)
+    {
+      DateTime trackerStartTime = UpdateTimeTrackerStartTime(appLaunchTime,
+                                                            forceUpdateStartTime);
+      _timeTracker = new TimeTracker(trackerStartTime);
       _reportForm = new TimeReport();
       _components = new Container();
 
@@ -38,10 +54,11 @@ namespace ComputerTimeTracker
     /// </summary>
     /// <param name="appLaunchTime">Current application launch time.</param>
     /// <returns>Up-to-date time tracker start time.</returns>
-    private DateTime UpdateTimeTrackerStartTime(DateTime appLaunchTime)
+    private DateTime UpdateTimeTrackerStartTime(DateTime appLaunchTime,
+                                                bool forceUpdateStartTime)
     {
       DateTime startTime = Settings.Default.TimeTrackerStartTime;
-      if (startTime.Date != appLaunchTime.Date)
+      if (forceUpdateStartTime || (startTime.Date != appLaunchTime.Date))
       {
         // Update the existing start time if this is the first time the application
         // has been launched today
