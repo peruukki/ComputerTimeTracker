@@ -57,4 +57,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy $(SolutionDir)\Application\app.config $(ProjectDir)\TesterNUnit.config</PostBuildEvent>
+  </PropertyGroup>
 </Project>
