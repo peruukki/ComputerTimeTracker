@@ -32,6 +32,21 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
+    /// Updates the time report based on the given time tracker state.
+    /// </summary>
+    /// <param name="timeTracker">Time tracker.</param>
+    public void UpdateReport(TimeTracker timeTracker)
+    {
+      DateTime currentTime = DateTime.Now;
+      _lblTimeCurrent.Text = currentTime.ToLongTimeString();
+
+      TimeSpan workTime = timeTracker.GetWorkTime(currentTime);
+      _lblTimeWork.Text = String.Format("{0:0#}:{1:0#}:{2:0#}",
+                                        workTime.Hours, workTime.Minutes,
+                                        workTime.Seconds);
+    }
+
+    /// <summary>
     /// Called before the form is closed.
     /// </summary>
     /// <param name="sender">Ignored.</param>

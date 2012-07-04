@@ -130,6 +130,7 @@ namespace ComputerTimeTracker
     /// <param name="e">Ignored.</param>
     private void ShowReport(object Sender, EventArgs e)
     {
+      _reportForm.UpdateReport(_timeTracker);
       _reportForm.Show();
       _reportForm.Activate();
     }

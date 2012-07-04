@@ -109,5 +109,17 @@ namespace TesterNUnit
       Assert.That(lastEvent.Type, Is.EqualTo(type));
       Assert.That(lastEvent.Time, Is.EqualTo(time));
     }
+
+    /// <summary>
+    /// Verifies that the work time is correctly calculated.
+    /// </summary>
+    [Test]
+    public void CheckWorkTime()
+    {
+      DateTime startTime = DateTime.Now;
+      TimeTracker tracker = new TimeTracker(startTime);
+      TimeSpan workTime = new TimeSpan(1, 2, 3);
+      Assert.That(tracker.GetWorkTime(startTime.Add(workTime)), Is.EqualTo(workTime));
+    }
   }
 }

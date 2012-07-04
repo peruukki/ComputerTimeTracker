@@ -31,5 +31,16 @@ namespace ComputerTimeTracker
       _events = new List<TrackableEvent>();
       _events.Add(new TrackableEvent(TrackableEvent.EventType.Start, startTime));
     }
+
+    /// <summary>
+    /// Returns the current work time as calculated from current time and
+    /// computer usage start time.
+    /// </summary>
+    /// <param name="currentTime">Current time.</param>
+    /// <returns>Current work time.</returns>
+    public TimeSpan GetWorkTime(DateTime currentTime)
+    {
+      return currentTime.Subtract(StartTime);
+    }
   }
 }
