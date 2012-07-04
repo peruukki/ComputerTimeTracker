@@ -58,6 +58,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy $(SolutionDir)\Application\app.config $(ProjectDir)\TesterNUnit.config</PostBuildEvent>
+    <PostBuildEvent>copy $(SolutionDir)\Application\app.config $(ProjectDir)\$(ProjectName).config</PostBuildEvent>
   </PropertyGroup>
 </Project>

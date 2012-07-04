@@ -39,7 +39,7 @@ namespace ComputerTimeTracker
                                         bool forceUpdateStartTime)
     {
       DateTime trackerStartTime = UpdateTimeTrackerStartTime(appLaunchTime,
-                                                            forceUpdateStartTime);
+                                                             forceUpdateStartTime);
       _timeTracker = new TimeTracker(trackerStartTime);
       _reportForm = new TimeReport();
       _components = new Container();
