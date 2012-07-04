@@ -41,7 +41,7 @@ namespace ComputerTimeTracker
       DateTime trackerStartTime = UpdateTimeTrackerStartTime(appLaunchTime,
                                                              forceUpdateStartTime);
       _timeTracker = new TimeTracker(trackerStartTime);
-      _reportForm = new TimeReport();
+      _reportForm = new TimeReport(trackerStartTime);
       _components = new Container();
 
       _notifyIcon = CreateNotifyIcon(_components);

@@ -13,9 +13,11 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Creates a new TimeReport instance.
     /// </summary>
-    public TimeReport()
+    /// <param name="startTime">Computer usage start time.</param>
+    public TimeReport(DateTime startTime)
     {
       InitializeComponent();
+      _lblTimeStart.Text = startTime.ToLongTimeString();
       FormClosing += new FormClosingEventHandler(ReportFormClosing);
     }
 
@@ -41,6 +43,16 @@ namespace ComputerTimeTracker
         e.Cancel = true;
         Hide();
       }
+    }
+
+    /// <summary>
+    /// Called when the OK button is clicked.
+    /// </summary>
+    /// <param name="sender">Ignored.</param>
+    /// <param name="e">Ignored.</param>
+    private void _btnOk_Click(object sender, EventArgs e)
+    {
+      Close();
     }
   }
 }
