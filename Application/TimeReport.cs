@@ -53,7 +53,7 @@ namespace ComputerTimeTracker
     /// <param name="e">Closing event related data.</param>
     private void ReportFormClosing(object sender, FormClosingEventArgs e)
     {
-      if (!_close)
+      if ((e.CloseReason == CloseReason.UserClosing) && !_close)
       {
         e.Cancel = true;
         Hide();
