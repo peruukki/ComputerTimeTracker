@@ -12,9 +12,16 @@ namespace ComputerTimeTracker
   /// </summary>
   public class NotifyIconApplicationContext : ApplicationContext
   {
+    /// <summary>
+    /// Gets the TimeTracker instance of the application.
+    /// </summary>
     public TimeTracker TimeTracker { get { return _timeTracker; } }
     private TimeTracker _timeTracker;
 
+    /// <summary>
+    /// Gets the main form of the application.
+    /// </summary>
+    new public IMainForm MainForm { get { return _reportForm; } }
     private TimeReport _reportForm;
     private NotifyIcon _notifyIcon;
     private IContainer _components;

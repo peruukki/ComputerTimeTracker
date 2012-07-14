@@ -6,7 +6,7 @@ namespace ComputerTimeTracker
   /// <summary>
   /// The form that shows the computer usage time report.
   /// </summary>
-  public partial class TimeReport : Form
+  public partial class TimeReport : Form, IMainForm
   {
     private bool _close = false;
 
@@ -18,7 +18,7 @@ namespace ComputerTimeTracker
     {
       InitializeComponent();
       _lblTimeStart.Text = startTime.ToLongTimeString();
-      FormClosing += new FormClosingEventHandler(ReportFormClosing);
+      FormClosing += new FormClosingEventHandler(MainFormClosing);
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ namespace ComputerTimeTracker
     /// </summary>
     /// <param name="sender">Ignored.</param>
     /// <param name="e">Closing event related data.</param>
-    private void ReportFormClosing(object sender, FormClosingEventArgs e)
+    public void MainFormClosing(object sender, FormClosingEventArgs e)
     {
       if ((e.CloseReason == CloseReason.UserClosing) && !_close)
       {

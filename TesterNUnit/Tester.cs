@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 using NUnit.Core;
 using NUnit.Framework;
 using ComputerTimeTracker;
@@ -29,6 +29,27 @@ namespace TesterNUnit
     public void RunApplication()
     {
       new NotifyIconApplicationContext(DateTime.Now).Exit();
+    }
+
+    /// <summary>
+    /// Ensures that the application main form is only closed when it should be.
+    /// </summary>
+    [Test]
+    public void CloseMainForm()
+    {
+      NotifyIconApplicationContext context = new NotifyIconApplicationContext(DateTime.Now);
+
+      Console.WriteLine("User closing main form");
+      FormClosingEventArgs e1 = new FormClosingEventArgs(CloseReason.UserClosing, false);
+      context.MainForm.MainFormClosing(this, e1);
+      Assert.That(e1.Cancel, Is.True);
+
+      Console.WriteLine("Windows shutdown closing main form");
+      FormClosingEventArgs e2 = new FormClosingEventArgs(CloseReason.WindowsShutDown, false);
+      context.MainForm.MainFormClosing(this, e2);
+      Assert.That(e2.Cancel, Is.False);
+
+      context.Exit();
     }
 
     /// <summary>
