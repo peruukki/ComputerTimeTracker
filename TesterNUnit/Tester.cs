@@ -15,13 +15,24 @@ namespace TesterNUnit
   [TestFixture]
   public class Tester
   {
+    NotifyIconApplicationContext _context;
+
     /// <summary>
     /// Initialization method called before every test method.
     /// </summary>
     [SetUp]
     public void Init()
     {
-      // Nothing to initialize
+      _context = new NotifyIconApplicationContext(DateTime.Now);
+    }
+
+    /// <summary>
+    /// Cleanup method called after every test method.
+    /// </summary>
+    [TearDown]
+    public void Uninit()
+    {
+      _context.Exit();
     }
 
     /// <summary>
@@ -30,7 +41,7 @@ namespace TesterNUnit
     [Test]
     public void RunApplication()
     {
-      new NotifyIconApplicationContext(DateTime.Now).Exit();
+      // Nothing to do, just runs the SetUp and TearDown methods
     }
 
     /// <summary>
@@ -39,19 +50,15 @@ namespace TesterNUnit
     [Test]
     public void CloseMainForm()
     {
-      NotifyIconApplicationContext context = new NotifyIconApplicationContext(DateTime.Now);
-
       Console.WriteLine("User closing main form");
       FormClosingEventArgs e1 = new FormClosingEventArgs(CloseReason.UserClosing, false);
-      context.MainForm.MainFormClosing(this, e1);
+      _context.MainForm.MainFormClosing(this, e1);
       Assert.That(e1.Cancel, Is.True);
 
       Console.WriteLine("Windows shutdown closing main form");
       FormClosingEventArgs e2 = new FormClosingEventArgs(CloseReason.WindowsShutDown, false);
-      context.MainForm.MainFormClosing(this, e2);
+      _context.MainForm.MainFormClosing(this, e2);
       Assert.That(e2.Cancel, Is.False);
-
-      context.Exit();
     }
 
     /// <summary>
@@ -76,26 +83,29 @@ namespace TesterNUnit
     {
       DateTime launchTime1 = new DateTime(2012, 1, 1, 1, 1, 1);
 
+      // Exit the common context and reuse it
+      _context.Exit();
+
       // Run the application, forcing the start time to be updated
       Console.WriteLine("Launching application at " + launchTime1);
-      NotifyIconApplicationContext context =
-        new NotifyIconApplicationContext(launchTime1, true);
-      Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
-      context.Exit();
+      _context = new NotifyIconApplicationContext(launchTime1, true);
+      Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
+      _context.Exit();
 
       // Run the application again on the same day
       DateTime launchTime2 = launchTime1.AddMinutes(1);
       Console.WriteLine("Launching application at " + launchTime2);
-      context = new NotifyIconApplicationContext(launchTime2);
-      Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
-      context.Exit();
+      _context = new NotifyIconApplicationContext(launchTime2);
+      Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
+      _context.Exit();
 
       // Run the application again on the next day
       DateTime launchTime3 = launchTime1.AddDays(1);
       Console.WriteLine("Launching application at " + launchTime3);
-      context = new NotifyIconApplicationContext(launchTime3);
-      Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime3));
-      context.Exit();
+      _context = new NotifyIconApplicationContext(launchTime3);
+      Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(launchTime3));
+
+      // The context will be exited in TearDown
     }
 
     /// <summary>
@@ -105,20 +115,16 @@ namespace TesterNUnit
     [Test]
     public void HandleSessionEvents()
     {
-      NotifyIconApplicationContext context = new NotifyIconApplicationContext(DateTime.Now);
-
-      SendHandledSessionEvent("Session locked", context,
+      SendHandledSessionEvent("Session locked", _context,
                               new SessionSwitchEventArgs(SessionSwitchReason.SessionLock),
                               TrackableEvent.EventType.Lock);
 
-      SendHandledSessionEvent("Session unlocked", context,
+      SendHandledSessionEvent("Session unlocked", _context,
                               new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock),
                               TrackableEvent.EventType.Unlock);
 
-      SendIgnoredSessionEvent("Remote connection", context,
+      SendIgnoredSessionEvent("Remote connection", _context,
                               new SessionSwitchEventArgs(SessionSwitchReason.RemoteConnect));
-
-      context.Exit();
     }
 
     /// <summary>
