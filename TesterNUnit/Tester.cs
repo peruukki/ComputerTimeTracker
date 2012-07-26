@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using NUnit.Core;
 using NUnit.Framework;
 using ComputerTimeTracker;
+using Microsoft.Win32;
+using System.Collections.Generic;
 
 namespace TesterNUnit
 {
@@ -94,6 +96,73 @@ namespace TesterNUnit
       context = new NotifyIconApplicationContext(launchTime3);
       Assert.That(context.TimeTracker.StartTime, Is.EqualTo(launchTime3));
       context.Exit();
+    }
+
+    /// <summary>
+    /// Sends system session switch events to the application and verifies that
+    /// it creates trackable events from them as expected.
+    /// </summary>
+    [Test]
+    public void HandleSessionEvents()
+    {
+      NotifyIconApplicationContext context = new NotifyIconApplicationContext(DateTime.Now);
+
+      SendHandledSessionEvent("Session locked", context,
+                              new SessionSwitchEventArgs(SessionSwitchReason.SessionLock),
+                              TrackableEvent.EventType.Lock);
+
+      SendHandledSessionEvent("Session unlocked", context,
+                              new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock),
+                              TrackableEvent.EventType.Unlock);
+
+      SendIgnoredSessionEvent("Remote connection", context,
+                              new SessionSwitchEventArgs(SessionSwitchReason.RemoteConnect));
+
+      context.Exit();
+    }
+
+    /// <summary>
+    /// Sends a session event to the application that it is expected to handle.
+    /// </summary>
+    /// <param name="description">Event description for logging purposes.</param>
+    /// <param name="context">Application context.</param>
+    /// <param name="e">Session event to send.</param>
+    /// <param name="expectedEventType">Expected trackable event type added by
+    /// the application.</param>
+    private void SendHandledSessionEvent(string description,
+                                         NotifyIconApplicationContext context,
+                                         SessionSwitchEventArgs e,
+                                         TrackableEvent.EventType expectedEventType)
+    {
+      IList<TrackableEvent> events = context.TimeTracker.Events;
+      int eventCount = events.Count;
+
+      Console.WriteLine(description);
+      context.SessionEventOccurred(this, e);
+
+      Assert.That(events.Count, Is.EqualTo(++eventCount));
+      TrackableEvent lastEvent = events[events.Count - 1];
+      Assert.That(lastEvent.Type, Is.EqualTo(expectedEventType));
+    }
+
+    /// <summary>
+    /// Sends a session event to the application that it is expected to ignore.
+    /// </summary>
+    /// <param name="description">Event description for logging purposes.</param>
+    /// <param name="context">Application context.</param>
+    /// <param name="e">Session event to send.</param>
+    /// the application.</param>
+    private void SendIgnoredSessionEvent(string description,
+                                         NotifyIconApplicationContext context,
+                                         SessionSwitchEventArgs e)
+    {
+      IList<TrackableEvent> events = context.TimeTracker.Events;
+      int eventCount = events.Count;
+
+      Console.WriteLine(description);
+      context.SessionEventOccurred(this, e);
+
+      Assert.That(events.Count, Is.EqualTo(eventCount));
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Drawing;
 using ComputerTimeTracker.Properties;
+using Microsoft.Win32;
 
 namespace ComputerTimeTracker
 {
@@ -53,6 +54,34 @@ namespace ComputerTimeTracker
 
       _notifyIcon = CreateNotifyIcon(_components);
       _notifyIcon.ContextMenu = CreateNotifyIconContextMenu();
+
+      SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SessionEventOccurred);
+    }
+
+    /// <summary>
+    /// Called when a system session switch event has occurred.
+    /// </summary>
+    /// <param name="sender">Ignored.</param>
+    /// <param name="e">Session switch related data.</param>
+    public void SessionEventOccurred(object sender, SessionSwitchEventArgs e)
+    {
+      TrackableEvent.EventType eventType;
+
+      switch (e.Reason)
+      {
+        case SessionSwitchReason.SessionLock:
+          eventType = TrackableEvent.EventType.Lock;
+          break;
+
+        case SessionSwitchReason.SessionUnlock:
+          eventType = TrackableEvent.EventType.Unlock;
+          break;
+
+        default:
+          return;
+      }
+
+      _timeTracker.Events.Add(new TrackableEvent(eventType, DateTime.Now));
     }
 
     /// <summary>
