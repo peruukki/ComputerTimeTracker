@@ -6,7 +6,7 @@ namespace ComputerTimeTracker
   /// <summary>
   /// The form that shows the computer usage time report.
   /// </summary>
-  public partial class TimeReport : Form, IMainForm
+  public partial class TimeReport: Form, IMainForm
   {
     private bool _close = false;
 
