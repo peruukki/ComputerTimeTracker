@@ -37,6 +37,8 @@ namespace ComputerTimeTracker
     /// <param name="timeTracker">Time tracker.</param>
     public void UpdateReport(TimeTracker timeTracker)
     {
+      _lblTimeStart.Text = timeTracker.StartTime.ToLongTimeString();
+
       DateTime currentTime = DateTime.Now;
       _lblTimeCurrent.Text = currentTime.ToLongTimeString();
 

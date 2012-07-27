@@ -23,7 +23,7 @@ namespace TesterNUnit
     [SetUp]
     public void Init()
     {
-      _context = new NotifyIconApplicationContext(DateTime.Now);
+      _context = null;
     }
 
     /// <summary>
@@ -32,7 +32,10 @@ namespace TesterNUnit
     [TearDown]
     public void Uninit()
     {
-      _context.Exit();
+      if (_context != null)
+      {
+        _context.Exit();
+      }
     }
 
     /// <summary>
@@ -41,7 +44,7 @@ namespace TesterNUnit
     [Test]
     public void RunApplication()
     {
-      // Nothing to do, just runs the SetUp and TearDown methods
+      _context = new NotifyIconApplicationContext(DateTime.Now);
     }
 
     /// <summary>
@@ -50,6 +53,8 @@ namespace TesterNUnit
     [Test]
     public void CloseMainForm()
     {
+      _context = new NotifyIconApplicationContext(DateTime.Now);
+
       Console.WriteLine("User closing main form");
       FormClosingEventArgs e1 = new FormClosingEventArgs(CloseReason.UserClosing, false);
       _context.MainForm.MainFormClosing(this, e1);
@@ -83,9 +88,6 @@ namespace TesterNUnit
     {
       DateTime launchTime1 = new DateTime(2012, 1, 1, 1, 1, 1);
 
-      // Exit the common context and reuse it
-      _context.Exit();
-
       // Run the application, forcing the start time to be updated
       Console.WriteLine("Launching application at " + launchTime1);
       _context = new NotifyIconApplicationContext(launchTime1, true);
@@ -115,60 +117,31 @@ namespace TesterNUnit
     [Test]
     public void HandleSessionEvents()
     {
-      SendHandledSessionEvent("Session locked", _context,
-                              new SessionSwitchEventArgs(SessionSwitchReason.SessionLock),
-                              TrackableEvent.EventType.Lock);
+      CustomClock clock = new CustomClock(new DateTime(2012, 1, 1, 1, 1, 1));
+      _context = new NotifyIconApplicationContext(clock.Now, true, clock);
 
-      SendHandledSessionEvent("Session unlocked", _context,
-                              new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock),
-                              TrackableEvent.EventType.Unlock);
+      Console.WriteLine("Session locked");
+      int eventCount = _context.TimeTracker.Events.Count;
+      _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
+      Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Lock));
+      Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(clock.Now));
+      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(++eventCount));
 
-      SendIgnoredSessionEvent("Remote connection", _context,
-                              new SessionSwitchEventArgs(SessionSwitchReason.RemoteConnect));
-    }
+      // Verify that the start time is updated when an Unlock event is received the next day
+      Console.WriteLine("Session unlocked");
+      clock.Now = clock.Now.AddDays(1);
+      _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock));
+      Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Start));
+      Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(clock.Now));
+      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(1));
 
-    /// <summary>
-    /// Sends a session event to the application that it is expected to handle.
-    /// </summary>
-    /// <param name="description">Event description for logging purposes.</param>
-    /// <param name="context">Application context.</param>
-    /// <param name="e">Session event to send.</param>
-    /// <param name="expectedEventType">Expected trackable event type added by
-    /// the application.</param>
-    private void SendHandledSessionEvent(string description,
-                                         NotifyIconApplicationContext context,
-                                         SessionSwitchEventArgs e,
-                                         TrackableEvent.EventType expectedEventType)
-    {
-      IList<TrackableEvent> events = context.TimeTracker.Events;
-      int eventCount = events.Count;
-
-      Console.WriteLine(description);
-      context.SessionEventOccurred(this, e);
-
-      Assert.That(events.Count, Is.EqualTo(++eventCount));
-      TrackableEvent lastEvent = events[events.Count - 1];
-      Assert.That(lastEvent.Type, Is.EqualTo(expectedEventType));
-    }
-
-    /// <summary>
-    /// Sends a session event to the application that it is expected to ignore.
-    /// </summary>
-    /// <param name="description">Event description for logging purposes.</param>
-    /// <param name="context">Application context.</param>
-    /// <param name="e">Session event to send.</param>
-    /// the application.</param>
-    private void SendIgnoredSessionEvent(string description,
-                                         NotifyIconApplicationContext context,
-                                         SessionSwitchEventArgs e)
-    {
-      IList<TrackableEvent> events = context.TimeTracker.Events;
-      int eventCount = events.Count;
-
-      Console.WriteLine(description);
-      context.SessionEventOccurred(this, e);
-
-      Assert.That(events.Count, Is.EqualTo(eventCount));
+      // Verify that the remote connection event is ignored
+      TrackableEvent.EventType lastType = _context.TimeTracker.LastEvent.Type;
+      eventCount = _context.TimeTracker.Events.Count;
+      Console.WriteLine("Remote connection");
+      _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.RemoteConnect));
+      Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(lastType));
+      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(eventCount));
     }
 
     /// <summary>

@@ -12,8 +12,7 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Gets the computer usage start time.
     /// </summary>
-    public DateTime StartTime { get { return _startTime; } }
-    private DateTime _startTime;
+    public DateTime StartTime { get { return Events[0].Time; } }
 
     /// <summary>
     /// Gets the events tracked by the tracker.
@@ -22,12 +21,16 @@ namespace ComputerTimeTracker
     private IList<TrackableEvent> _events;
 
     /// <summary>
+    /// Gets the last event in the tracker.
+    /// </summary>
+    public TrackableEvent LastEvent { get { return Events[Events.Count - 1]; } }
+
+    /// <summary>
     /// Creates a TimeTracker instance.
     /// </summary>
     /// <param name="startTime">Computer usage start time.</param>
     public TimeTracker(DateTime startTime)
     {
-      _startTime = startTime;
       _events = new List<TrackableEvent>();
       _events.Add(new TrackableEvent(TrackableEvent.EventType.Start, startTime));
     }

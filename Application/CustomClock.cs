@@ -8,9 +8,18 @@ namespace ComputerTimeTracker
   public class CustomClock: IClock
   {
     /// <summary>
-    /// Returns the last set time as current time.
+    /// Sets or gets the current time.
     /// </summary>
     public DateTime Now { get { return _now; } set { _now = value; } }
     private DateTime _now;
+
+    /// <summary>
+    /// Creates and initializes a CustomClock.
+    /// </summary>
+    /// <param name="now">Current time.</param>
+    public CustomClock(DateTime now)
+    {
+      Now = now;
+    }
   }
 }
