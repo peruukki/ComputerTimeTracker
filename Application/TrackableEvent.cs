@@ -52,5 +52,24 @@ namespace ComputerTimeTracker
       _type = type;
       _time = time;
     }
+
+    /// <summary>
+    /// Returns a description of the event.
+    /// </summary>
+    /// <returns>Event description.</returns>
+    override public string ToString()
+    {
+      switch (Type)
+      {
+        case EventType.Lock:
+          return "Computer locked";
+        case EventType.Start:
+          return "Computer usage started";
+        case EventType.Unlock:
+          return "Computer unlocked";
+        default:
+          throw new InvalidOperationException("Unknown type " + Type);
+      }
+    }
   }
 }

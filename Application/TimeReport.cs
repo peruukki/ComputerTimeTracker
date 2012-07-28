@@ -37,8 +37,26 @@ namespace ComputerTimeTracker
     /// <param name="timeTracker">Time tracker.</param>
     public void UpdateReport(TimeTracker timeTracker)
     {
-      _lblTimeStart.Text = timeTracker.StartTime.ToLongTimeString();
+      UpdateEventContent(timeTracker);
+      UpdateStaticContent(timeTracker);
+    }
 
+    /// <summary>
+    /// Updates the labels that describe tracked events.
+    /// </summary>
+    /// <param name="timeTracker">Time tracker.</param>
+    private void UpdateEventContent(TimeTracker timeTracker)
+    {
+      _lblTextStart.Text = timeTracker.Events[0].ToString();
+      _lblTimeStart.Text = timeTracker.Events[0].Time.ToLongTimeString();
+    }
+
+    /// <summary>
+    /// Updates the labels that always appear in the form.
+    /// </summary>
+    /// <param name="timeTracker">Time tracker.</param>
+    private void UpdateStaticContent(TimeTracker timeTracker)
+    {
       DateTime currentTime = DateTime.Now;
       _lblTimeCurrent.Text = currentTime.ToLongTimeString();
 

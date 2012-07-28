@@ -45,6 +45,7 @@ namespace TesterNUnit
     public void RunApplication()
     {
       _context = new NotifyIconApplicationContext(DateTime.Now);
+      _context.ShowReport(null, null);
     }
 
     /// <summary>
