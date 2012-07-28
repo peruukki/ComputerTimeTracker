@@ -69,6 +69,7 @@ namespace ComputerTimeTracker
       // 
       // _lblTimeWork
       // 
+      this._lblTimeWork.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this._lblTimeWork.AutoSize = true;
       this._lblTimeWork.Location = new System.Drawing.Point(10, 60);
       this._lblTimeWork.Name = "_lblTimeWork";
@@ -78,6 +79,7 @@ namespace ComputerTimeTracker
       // 
       // _lblTextWork
       // 
+      this._lblTextWork.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this._lblTextWork.AutoSize = true;
       this._lblTextWork.Location = new System.Drawing.Point(70, 60);
       this._lblTextWork.Name = "_lblTextWork";
@@ -87,6 +89,7 @@ namespace ComputerTimeTracker
       // 
       // _lblTextCurrent
       // 
+      this._lblTextCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this._lblTextCurrent.AutoSize = true;
       this._lblTextCurrent.Location = new System.Drawing.Point(70, 35);
       this._lblTextCurrent.Name = "_lblTextCurrent";
@@ -96,6 +99,7 @@ namespace ComputerTimeTracker
       // 
       // _lblTimeCurrent
       // 
+      this._lblTimeCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this._lblTimeCurrent.AutoSize = true;
       this._lblTimeCurrent.Location = new System.Drawing.Point(10, 35);
       this._lblTimeCurrent.Name = "_lblTimeCurrent";

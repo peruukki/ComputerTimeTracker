@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace ComputerTimeTracker
 {
@@ -8,7 +9,20 @@ namespace ComputerTimeTracker
   /// </summary>
   public partial class TimeReport: Form, IMainForm
   {
+    /// <summary>
+    /// Whether the form should be closed when the Close event is received.
+    /// </summary>
     private bool _close = false;
+
+    /// <summary>
+    /// The number of vertical pixels between trackable event labels.
+    /// </summary>
+    private readonly int EVENT_LABEL_HEIGHT;
+
+    /// <summary>
+    /// Initial height of the form, fitting one trackable event.
+    /// </summary>
+    private readonly int FORM_INITIAL_HEIGHT;
 
     /// <summary>
     /// Creates a new TimeReport instance.
@@ -17,8 +31,13 @@ namespace ComputerTimeTracker
     public TimeReport(DateTime startTime)
     {
       InitializeComponent();
-      _lblTimeStart.Text = startTime.ToLongTimeString();
       FormClosing += new FormClosingEventHandler(MainFormClosing);
+
+      // The start labels are only used for helping in layout design
+      _lblTimeStart.Visible = false;
+      _lblTextStart.Visible = false;
+      EVENT_LABEL_HEIGHT = _lblTextCurrent.Top - _lblTextStart.Top;
+      FORM_INITIAL_HEIGHT = Height;
     }
 
     /// <summary>
@@ -47,8 +66,31 @@ namespace ComputerTimeTracker
     /// <param name="timeTracker">Time tracker.</param>
     private void UpdateEventContent(TimeTracker timeTracker)
     {
-      _lblTextStart.Text = timeTracker.Events[0].ToString();
-      _lblTimeStart.Text = timeTracker.Events[0].Time.ToLongTimeString();
+      int timeLeft = _lblTimeStart.Left;
+      int descriptionLeft = _lblTextStart.Left;
+      int top = _lblTextStart.Top;
+      int labelCount = 0;
+
+      foreach (TrackableEvent trackableEvent in timeTracker.Events)
+      {
+        Label timeLabel = new Label();
+        timeLabel.AutoSize = true;
+        timeLabel.Location = new Point(timeLeft, top);
+        timeLabel.Text = trackableEvent.Time.ToLongTimeString(); ;
+        Controls.Add(timeLabel);
+
+        Label descriptionLabel = new Label();
+        descriptionLabel.AutoSize = true;
+        descriptionLabel.Location = new Point(descriptionLeft, top);
+        descriptionLabel.Text = trackableEvent.ToString();
+        Controls.Add(descriptionLabel);
+
+        top += EVENT_LABEL_HEIGHT;
+        labelCount++;
+      }
+
+      // Adjust the height; the initial height can fit one event
+      Height = FORM_INITIAL_HEIGHT + ((labelCount - 1) * EVENT_LABEL_HEIGHT);
     }
 
     /// <summary>
