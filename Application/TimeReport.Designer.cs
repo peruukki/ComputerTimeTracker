@@ -42,16 +42,16 @@ namespace ComputerTimeTracker
       this._lblTimeStart.AutoSize = true;
       this._lblTimeStart.Location = new System.Drawing.Point(10, 15);
       this._lblTimeStart.Name = "_lblTimeStart";
-      this._lblTimeStart.Size = new System.Drawing.Size(49, 13);
+      this._lblTimeStart.Size = new System.Drawing.Size(57, 14);
       this._lblTimeStart.TabIndex = 0;
       this._lblTimeStart.Text = "00:00:00";
       // 
       // _lblTextStart
       // 
       this._lblTextStart.AutoSize = true;
-      this._lblTextStart.Location = new System.Drawing.Point(80, 15);
+      this._lblTextStart.Location = new System.Drawing.Point(70, 15);
       this._lblTextStart.Name = "_lblTextStart";
-      this._lblTextStart.Size = new System.Drawing.Size(119, 13);
+      this._lblTextStart.Size = new System.Drawing.Size(140, 14);
       this._lblTextStart.TabIndex = 1;
       this._lblTextStart.Text = "Computer usage started";
       // 
@@ -72,25 +72,25 @@ namespace ComputerTimeTracker
       this._lblTimeWork.AutoSize = true;
       this._lblTimeWork.Location = new System.Drawing.Point(10, 60);
       this._lblTimeWork.Name = "_lblTimeWork";
-      this._lblTimeWork.Size = new System.Drawing.Size(49, 13);
+      this._lblTimeWork.Size = new System.Drawing.Size(57, 14);
       this._lblTimeWork.TabIndex = 3;
       this._lblTimeWork.Text = "00:00:00";
       // 
       // _lblTextWork
       // 
       this._lblTextWork.AutoSize = true;
-      this._lblTextWork.Location = new System.Drawing.Point(80, 60);
+      this._lblTextWork.Location = new System.Drawing.Point(70, 60);
       this._lblTextWork.Name = "_lblTextWork";
-      this._lblTextWork.Size = new System.Drawing.Size(55, 13);
+      this._lblTextWork.Size = new System.Drawing.Size(64, 14);
       this._lblTextWork.TabIndex = 4;
       this._lblTextWork.Text = "Work time";
       // 
       // _lblTextCurrent
       // 
       this._lblTextCurrent.AutoSize = true;
-      this._lblTextCurrent.Location = new System.Drawing.Point(80, 35);
+      this._lblTextCurrent.Location = new System.Drawing.Point(70, 35);
       this._lblTextCurrent.Name = "_lblTextCurrent";
-      this._lblTextCurrent.Size = new System.Drawing.Size(63, 13);
+      this._lblTextCurrent.Size = new System.Drawing.Size(76, 14);
       this._lblTextCurrent.TabIndex = 6;
       this._lblTextCurrent.Text = "Current time";
       // 
@@ -99,7 +99,7 @@ namespace ComputerTimeTracker
       this._lblTimeCurrent.AutoSize = true;
       this._lblTimeCurrent.Location = new System.Drawing.Point(10, 35);
       this._lblTimeCurrent.Name = "_lblTimeCurrent";
-      this._lblTimeCurrent.Size = new System.Drawing.Size(49, 13);
+      this._lblTimeCurrent.Size = new System.Drawing.Size(57, 14);
       this._lblTimeCurrent.TabIndex = 5;
       this._lblTimeCurrent.Text = "00:00:00";
       // 
@@ -117,6 +117,7 @@ namespace ComputerTimeTracker
       this.Controls.Add(this._btnOk);
       this.Controls.Add(this._lblTextStart);
       this.Controls.Add(this._lblTimeStart);
+      this.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
