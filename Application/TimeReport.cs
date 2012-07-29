@@ -27,8 +27,7 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Creates a new TimeReport instance.
     /// </summary>
-    /// <param name="startTime">Computer usage start time.</param>
-    public TimeReport(DateTime startTime)
+    public TimeReport()
     {
       InitializeComponent();
       FormClosing += new FormClosingEventHandler(MainFormClosing);

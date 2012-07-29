@@ -146,6 +146,33 @@ namespace TesterNUnit
     }
 
     /// <summary>
+    /// Verifies that the tracked events are persisted when the application
+    /// is exited and launched again on the same day.
+    /// </summary>
+    [Test]
+    public void CheckThatEventsAreStored()
+    {
+      CustomClock clock = new CustomClock(new DateTime(2012, 1, 1, 1, 1, 1));
+
+      Console.WriteLine("Starting application at " + clock.Now);
+      _context = new NotifyIconApplicationContext(clock.Now, true, clock);
+
+      clock.Now = clock.Now.AddHours(1);
+      _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
+      clock.Now = clock.Now.AddHours(1);
+      _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock));
+      int eventCount = _context.TimeTracker.Events.Count;
+      Console.WriteLine("Exiting application at " + clock.Now +
+                        ", " + eventCount + " events tracked");
+      _context.Exit();
+
+      clock.Now = clock.Now.AddHours(1);
+      Console.WriteLine("Restarting application at " + clock.Now);
+      _context = new NotifyIconApplicationContext(clock.Now, false, clock);
+      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(eventCount));
+    }
+
+    /// <summary>
     /// Adds events to the tracker and checks their validity from the tracker.
     /// </summary>
     [Test]

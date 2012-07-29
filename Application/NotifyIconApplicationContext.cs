@@ -56,12 +56,12 @@ namespace ComputerTimeTracker
                                         bool forceUpdateStartTime,
                                         IClock clock)
     {
-      DateTime trackerStartTime = UpdateTimeTrackerStartTime(appLaunchTime,
-                                                             forceUpdateStartTime);
-      _timeTracker = new TimeTracker(trackerStartTime);
-      _reportForm = new TimeReport(trackerStartTime);
+      UpdateTimeTrackerStartTime(appLaunchTime, forceUpdateStartTime);
+      _reportForm = new TimeReport();
       _components = new Container();
       _clock = clock;
+
+      RestoreSettings();
 
       _notifyIcon = CreateNotifyIcon(_components);
       _notifyIcon.ContextMenu = CreateNotifyIconContextMenu();
@@ -115,6 +115,8 @@ namespace ComputerTimeTracker
         // Add event normally
         tracker.Events.Add(trackableEvent);
       }
+
+      SaveSettings();
     }
 
     /// <summary>
@@ -122,20 +124,35 @@ namespace ComputerTimeTracker
     /// if necessary and returns its current value.
     /// </summary>
     /// <param name="appLaunchTime">Current application launch time.</param>
-    /// <returns>Up-to-date time tracker start time.</returns>
-    private DateTime UpdateTimeTrackerStartTime(DateTime appLaunchTime,
-                                                bool forceUpdateStartTime)
+    private void UpdateTimeTrackerStartTime(DateTime appLaunchTime,
+                                            bool forceUpdateStartTime)
     {
       DateTime startTime = Settings.Default.TimeTrackerStartTime;
-      if (forceUpdateStartTime || (startTime.Date != appLaunchTime.Date))
+      if (forceUpdateStartTime || (startTime == null) ||
+          (startTime.Date != appLaunchTime.Date))
       {
         // Update the existing start time if this is the first time the application
         // has been launched today
-        startTime = appLaunchTime;
-        Settings.Default.TimeTrackerStartTime = startTime;
+        Settings.Default.TimeTrackerStartTime = appLaunchTime;
         Settings.Default.Save();
       }
-      return startTime;
+    }
+
+    /// <summary>
+    /// Saves the application settings.
+    /// </summary>
+    private void SaveSettings()
+    {
+      Settings.Default.TimeTrackerStartTime = _timeTracker.StartTime;
+      Settings.Default.Save();
+    }
+
+    /// <summary>
+    /// Restores the application settings.
+    /// </summary>
+    private void RestoreSettings()
+    {
+      _timeTracker = new TimeTracker(Settings.Default.TimeTrackerStartTime);
     }
 
     /// <summary>
