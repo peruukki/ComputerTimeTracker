@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace ComputerTimeTracker
 {
@@ -13,6 +14,11 @@ namespace ComputerTimeTracker
     /// Whether the form should be closed when the Close event is received.
     /// </summary>
     private bool _close = false;
+
+    /// <summary>
+    /// Dynamic controls that may be permanently removed when updating the content.
+    /// </summary>
+    private readonly IList<Control> _dynamicControls = new List<Control>();
 
     /// <summary>
     /// The number of vertical pixels between trackable event labels.
@@ -55,6 +61,12 @@ namespace ComputerTimeTracker
     /// <param name="timeTracker">Time tracker.</param>
     public void UpdateReport(TimeTracker timeTracker)
     {
+      foreach (Control component in _dynamicControls)
+      {
+        Controls.Remove(component);
+      }
+      _dynamicControls.Clear();
+
       UpdateEventContent(timeTracker);
       UpdateStaticContent(timeTracker);
     }
@@ -77,12 +89,14 @@ namespace ComputerTimeTracker
         timeLabel.Location = new Point(timeLeft, top);
         timeLabel.Text = trackableEvent.Time.ToLongTimeString(); ;
         Controls.Add(timeLabel);
+        _dynamicControls.Add(timeLabel);
 
         Label descriptionLabel = new Label();
         descriptionLabel.AutoSize = true;
         descriptionLabel.Location = new Point(descriptionLeft, top);
         descriptionLabel.Text = trackableEvent.ToString();
         Controls.Add(descriptionLabel);
+        _dynamicControls.Add(descriptionLabel);
 
         top += EVENT_LABEL_HEIGHT;
         labelCount++;
