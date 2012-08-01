@@ -102,7 +102,7 @@ namespace ComputerTimeTracker
     /// <param name="trackableEvent">Event to add.</param>
     private void AddEvent(TimeTracker tracker, TrackableEvent trackableEvent)
     {
-      if ((trackableEvent.Time.DayOfYear != tracker.LastEvent.Time.DayOfYear) &&
+      if ((trackableEvent.Time.DayOfYear != tracker.FirstEvent.Time.DayOfYear) &&
           (trackableEvent.Type == TrackableEvent.EventType.Unlock))
       {
         // The new event starts a new work day

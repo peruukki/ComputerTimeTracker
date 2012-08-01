@@ -12,13 +12,18 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Gets the computer usage start time.
     /// </summary>
-    public DateTime StartTime { get { return Events[0].Time; } }
+    public DateTime StartTime { get { return FirstEvent.Time; } }
 
     /// <summary>
     /// Gets the events tracked by the tracker.
     /// </summary>
     public IList<TrackableEvent> Events { get { return _events; } }
     private IList<TrackableEvent> _events;
+
+    /// <summary>
+    /// Gets the first event in the tracker.
+    /// </summary>
+    public TrackableEvent FirstEvent { get { return Events[0]; } }
 
     /// <summary>
     /// Gets the last event in the tracker.

@@ -77,8 +77,8 @@ namespace TesterNUnit
       TimeTracker tracker = new TimeTracker(now);
       Console.WriteLine("Checking start time " + now);
       Assert.That(tracker.StartTime, Is.EqualTo(now));
-      Assert.That(tracker.Events[0].Time, Is.EqualTo(now));
-      Assert.That(tracker.Events[0].Type, Is.EqualTo(TrackableEvent.EventType.Start));
+      Assert.That(tracker.FirstEvent.Time, Is.EqualTo(now));
+      Assert.That(tracker.FirstEvent.Type, Is.EqualTo(TrackableEvent.EventType.Start));
     }
 
     /// <summary>
@@ -121,16 +121,25 @@ namespace TesterNUnit
       CustomClock clock = new CustomClock(new DateTime(2012, 1, 1, 1, 1, 1));
       _context = new NotifyIconApplicationContext(clock.Now, true, clock);
 
-      Console.WriteLine("Session locked");
+      Console.WriteLine("Session locked at " + clock.Now);
       int eventCount = _context.TimeTracker.Events.Count;
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
       Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Lock));
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(clock.Now));
       Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(++eventCount));
 
-      // Verify that the start time is updated when an Unlock event is received the next day
-      Console.WriteLine("Session unlocked");
+      // Verify that the start time remains unchanged when a Lock event is received the following day
       clock.Now = clock.Now.AddDays(1);
+      Console.WriteLine("Session locked at " + clock.Now);
+      DateTime startTimeBefore = _context.TimeTracker.StartTime;
+      _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
+      Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Lock));
+      Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(startTimeBefore));
+      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(++eventCount));
+
+      // Verify that the start time is updated when an Unlock event is received the following day
+      clock.Now = clock.Now.AddHours(1);
+      Console.WriteLine("Session unlocked at " + clock.Now);
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock));
       Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Start));
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(clock.Now));
