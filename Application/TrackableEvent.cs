@@ -62,11 +62,11 @@ namespace ComputerTimeTracker
       switch (Type)
       {
         case EventType.Lock:
-          return "Computer locked";
+          return "Locked";
         case EventType.Start:
-          return "Computer usage started";
+          return "Usage started";
         case EventType.Unlock:
-          return "Computer unlocked";
+          return "Unlocked";
         default:
           throw new InvalidOperationException("Unknown type " + Type);
       }

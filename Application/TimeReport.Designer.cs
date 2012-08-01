@@ -51,15 +51,15 @@ namespace ComputerTimeTracker
       this._lblTextStart.AutoSize = true;
       this._lblTextStart.Location = new System.Drawing.Point(70, 15);
       this._lblTextStart.Name = "_lblTextStart";
-      this._lblTextStart.Size = new System.Drawing.Size(140, 14);
+      this._lblTextStart.Size = new System.Drawing.Size(83, 14);
       this._lblTextStart.TabIndex = 1;
-      this._lblTextStart.Text = "Computer usage started";
+      this._lblTextStart.Text = "Usage started";
       // 
       // _btnOk
       // 
       this._btnOk.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
       this._btnOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this._btnOk.Location = new System.Drawing.Point(77, 90);
+      this._btnOk.Location = new System.Drawing.Point(52, 90);
       this._btnOk.Name = "_btnOk";
       this._btnOk.Size = new System.Drawing.Size(75, 23);
       this._btnOk.TabIndex = 2;
@@ -113,7 +113,7 @@ namespace ComputerTimeTracker
       this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
       this.CancelButton = this._btnOk;
-      this.ClientSize = new System.Drawing.Size(224, 125);
+      this.ClientSize = new System.Drawing.Size(174, 125);
       this.Controls.Add(this._lblTextCurrent);
       this.Controls.Add(this._lblTimeCurrent);
       this.Controls.Add(this._lblTextWork);
