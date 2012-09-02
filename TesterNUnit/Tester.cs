@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using NUnit.Core;
@@ -226,6 +227,37 @@ namespace TesterNUnit
       TimeTracker tracker = new TimeTracker(startTime);
       TimeSpan workTime = new TimeSpan(1, 2, 3);
       Assert.That(tracker.GetWorkTime(startTime.Add(workTime)), Is.EqualTo(workTime));
+    }
+
+    /// <summary>
+    /// Verifies that the periods between events are colored correctly.
+    /// </summary>
+    [Test]
+    public void CheckPeriodColor()
+    {
+      _context = new NotifyIconApplicationContext(DateTime.Now);
+
+      TimeTracker tracker = _context.TimeTracker;
+      IMainForm mainForm = _context.MainForm;
+
+      mainForm.UpdateForm(tracker);
+      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetActiveColor()));
+
+      AddEvent(tracker, TrackableEvent.EventType.Lock, new TimeSpan(0, 1, 0));
+      mainForm.UpdateForm(tracker);
+      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetInactiveColor()));
+
+      AddEvent(tracker, TrackableEvent.EventType.Lock, new TimeSpan(0, 2, 0));
+      mainForm.UpdateForm(tracker);
+      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetInactiveColor()));
+
+      AddEvent(tracker, TrackableEvent.EventType.Unlock, new TimeSpan(0, 3, 0));
+      mainForm.UpdateForm(tracker);
+      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetActiveColor()));
+
+      AddEvent(tracker, TrackableEvent.EventType.Unlock, new TimeSpan(0, 4, 0));
+      mainForm.UpdateForm(tracker);
+      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetActiveColor()));
     }
   }
 }

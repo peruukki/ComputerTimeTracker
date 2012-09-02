@@ -31,6 +31,11 @@ namespace ComputerTimeTracker
     private readonly int FORM_INITIAL_HEIGHT;
 
     /// <summary>
+    /// The color of the last period panel.
+    /// </summary>
+    private Color _lastPeriodPanelColor;
+
+    /// <summary>
     /// Creates a new TimeReport instance.
     /// </summary>
     public TimeReport()
@@ -56,22 +61,6 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
-    /// Updates the time report based on the given time tracker state.
-    /// </summary>
-    /// <param name="timeTracker">Time tracker.</param>
-    public void UpdateReport(TimeTracker timeTracker)
-    {
-      foreach (Control component in _dynamicControls)
-      {
-        Controls.Remove(component);
-      }
-      _dynamicControls.Clear();
-
-      UpdateEventContent(timeTracker);
-      UpdateStaticContent(timeTracker);
-    }
-
-    /// <summary>
     /// Updates the labels that describe tracked events.
     /// </summary>
     /// <param name="timeTracker">Time tracker.</param>
@@ -79,7 +68,9 @@ namespace ComputerTimeTracker
     {
       int timeLeft = _lblTimeStart.Left;
       int descriptionLeft = _lblTextStart.Left;
+      int panelLeft = _pnlPeriod1.Left;
       int top = _lblTextStart.Top;
+      int panelTop = _pnlPeriod1.Top;
       int labelCount = 0;
 
       foreach (TrackableEvent trackableEvent in timeTracker.Events)
@@ -98,7 +89,18 @@ namespace ComputerTimeTracker
         Controls.Add(descriptionLabel);
         _dynamicControls.Add(descriptionLabel);
 
+        Panel periodLabel = new Panel();
+        periodLabel.Size = new Size(15, 21);
+        periodLabel.Location = new Point(panelLeft, panelTop);
+        periodLabel.BackColor =
+          (trackableEvent.Activity == TrackableEvent.EventActivity.Active) ?
+          GetActiveColor() : GetInactiveColor();
+        _lastPeriodPanelColor = periodLabel.BackColor;
+        Controls.Add(periodLabel);
+        _dynamicControls.Add(periodLabel);
+
         top += EVENT_LABEL_HEIGHT;
+        panelTop += EVENT_LABEL_HEIGHT;
         labelCount++;
       }
 
@@ -122,10 +124,44 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
-    /// Called before the form is closed.
+    /// Called when the OK button is clicked.
     /// </summary>
     /// <param name="sender">Ignored.</param>
-    /// <param name="e">Closing event related data.</param>
+    /// <param name="e">Ignored.</param>
+    private void _btnOk_Click(object sender, EventArgs e)
+    {
+      Close();
+    }
+
+    #region IMainForm Members
+
+    public Color GetActiveColor()
+    {
+      return Color.Green;
+    }
+
+    public Color GetInactiveColor()
+    {
+      return Color.YellowGreen;
+    }
+
+    public Color GetLastPeriodPanelColor()
+    {
+      return _lastPeriodPanelColor;
+    }
+
+    public void UpdateForm(TimeTracker timeTracker)
+    {
+      foreach (Control component in _dynamicControls)
+      {
+        Controls.Remove(component);
+      }
+      _dynamicControls.Clear();
+
+      UpdateEventContent(timeTracker);
+      UpdateStaticContent(timeTracker);
+    }
+
     public void MainFormClosing(object sender, FormClosingEventArgs e)
     {
       if ((e.CloseReason == CloseReason.UserClosing) && !_close)
@@ -135,14 +171,6 @@ namespace ComputerTimeTracker
       }
     }
 
-    /// <summary>
-    /// Called when the OK button is clicked.
-    /// </summary>
-    /// <param name="sender">Ignored.</param>
-    /// <param name="e">Ignored.</param>
-    private void _btnOk_Click(object sender, EventArgs e)
-    {
-      Close();
-    }
+    #endregion // IMainForm Members
   }
 }

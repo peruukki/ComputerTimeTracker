@@ -31,16 +31,58 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
+    /// Trackable event activity type. Specifies which kind of a period the
+    /// event starts.
+    /// </summary>
+    public enum EventActivity
+    {
+      /// <summary>
+      /// The event starts an active period.
+      /// </summary>
+      Active,
+
+      /// <summary>
+      /// The event starts an inactive period.
+      /// </summary>
+      Inactive,
+    }
+
+    /// <summary>
+    /// Gets the <see cref="EventActivity"/> of the given <see cref="EventType"/>.
+    /// </summary>
+    /// <param name="type">Event type.</param>
+    /// <returns>Event activity.</returns>
+    private static EventActivity GetActivity(EventType type)
+    {
+      switch (type)
+      {
+        case EventType.Lock:
+          return EventActivity.Inactive;
+        case EventType.Start:
+        case EventType.Unlock:
+          return EventActivity.Active;
+        default:
+          throw new ArgumentOutOfRangeException("Unknown event type " + type);
+      }
+    }
+
+    /// <summary>
     /// Gets the <see cref="EventType"/> of this event.
     /// </summary>
     public EventType Type { get { return _type; } }
-    private EventType _type;
+    private readonly EventType _type;
 
     /// <summary>
     /// Gets the time of occurrence of this event.
     /// </summary>
     public DateTime Time { get { return _time; } }
-    private DateTime _time;
+    private readonly DateTime _time;
+
+    /// <summary>
+    /// Gets the <see cref="EventActivity"/> of this event.
+    /// </summary>
+    public EventActivity Activity { get { return _activity; } }
+    private readonly EventActivity _activity;
 
     /// <summary>
     /// Creates an immutable trackable event that occurred at the given time.
@@ -51,6 +93,7 @@ namespace ComputerTimeTracker
     {
       _type = type;
       _time = time;
+      _activity = GetActivity(type);
     }
 
     /// <summary>
