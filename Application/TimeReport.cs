@@ -72,6 +72,7 @@ namespace ComputerTimeTracker
       int panelLeft = _pnlPeriod1.Left;
       int top = _lblTextStart.Top;
       int panelTop = _pnlPeriod1.Top;
+      Size panelSize = _pnlPeriod1.Size;
       int labelCount = 0;
 
       foreach (TrackableEvent trackableEvent in timeTracker.Events)
@@ -97,7 +98,7 @@ namespace ComputerTimeTracker
       foreach (TimePeriod period in timeTracker.GetPeriods(currentTime))
       {
         Panel periodLabel = new Panel();
-        periodLabel.Size = new Size(15, 21);
+        periodLabel.Size = panelSize;
         periodLabel.Location = new Point(panelLeft, panelTop);
         periodLabel.BackColor = (period.Type == TimePeriod.PeriodType.Active) ?
                                 GetActiveColor() : GetInactiveColor();
