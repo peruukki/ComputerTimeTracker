@@ -64,7 +64,8 @@ namespace ComputerTimeTracker
     /// Updates the labels that describe tracked events.
     /// </summary>
     /// <param name="timeTracker">Time tracker.</param>
-    private void UpdateEventContent(TimeTracker timeTracker)
+    /// <param name="currentTime">Current time.</param>
+    private void UpdateEventContent(TimeTracker timeTracker, DateTime currentTime)
     {
       int timeLeft = _lblTimeStart.Left;
       int descriptionLeft = _lblTextStart.Left;
@@ -89,19 +90,22 @@ namespace ComputerTimeTracker
         Controls.Add(descriptionLabel);
         _dynamicControls.Add(descriptionLabel);
 
+        top += EVENT_LABEL_HEIGHT;
+        labelCount++;
+      }
+
+      foreach (TimePeriod period in timeTracker.GetPeriods(currentTime))
+      {
         Panel periodLabel = new Panel();
         periodLabel.Size = new Size(15, 21);
         periodLabel.Location = new Point(panelLeft, panelTop);
-        periodLabel.BackColor =
-          (trackableEvent.Activity == TrackableEvent.EventActivity.Active) ?
-          GetActiveColor() : GetInactiveColor();
+        periodLabel.BackColor = (period.Type == TimePeriod.PeriodType.Active) ?
+                                GetActiveColor() : GetInactiveColor();
         _lastPeriodPanelColor = periodLabel.BackColor;
         Controls.Add(periodLabel);
         _dynamicControls.Add(periodLabel);
 
-        top += EVENT_LABEL_HEIGHT;
         panelTop += EVENT_LABEL_HEIGHT;
-        labelCount++;
       }
 
       // Adjust the height; the initial height can fit one event
@@ -112,9 +116,9 @@ namespace ComputerTimeTracker
     /// Updates the labels that always appear in the form.
     /// </summary>
     /// <param name="timeTracker">Time tracker.</param>
-    private void UpdateStaticContent(TimeTracker timeTracker)
+    /// <param name="currentTime">Current time.</param>
+    private void UpdateStaticContent(TimeTracker timeTracker, DateTime currentTime)
     {
-      DateTime currentTime = DateTime.Now;
       _lblTimeCurrent.Text = currentTime.ToLongTimeString();
 
       TimeSpan workTime = timeTracker.GetWorkTime(currentTime);
@@ -158,8 +162,9 @@ namespace ComputerTimeTracker
       }
       _dynamicControls.Clear();
 
-      UpdateEventContent(timeTracker);
-      UpdateStaticContent(timeTracker);
+      DateTime now = DateTime.Now;
+      UpdateEventContent(timeTracker, now);
+      UpdateStaticContent(timeTracker, now);
     }
 
     public void MainFormClosing(object sender, FormClosingEventArgs e)

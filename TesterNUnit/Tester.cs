@@ -230,34 +230,37 @@ namespace TesterNUnit
     }
 
     /// <summary>
-    /// Verifies that the periods between events are colored correctly.
+    /// Verifies that the periods between events have correct value.
     /// </summary>
     [Test]
-    public void CheckPeriodColor()
+    public void CheckTimePeriods()
     {
       _context = new NotifyIconApplicationContext(DateTime.Now);
 
       TimeTracker tracker = _context.TimeTracker;
-      IMainForm mainForm = _context.MainForm;
+      CheckLastPeriod(tracker, TrackableEvent.EventType.Lock);
+      CheckLastPeriod(tracker, TrackableEvent.EventType.Lock);
+      CheckLastPeriod(tracker, TrackableEvent.EventType.Unlock);
+      CheckLastPeriod(tracker, TrackableEvent.EventType.Unlock);
+    }
 
-      mainForm.UpdateForm(tracker);
-      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetActiveColor()));
-
-      AddEvent(tracker, TrackableEvent.EventType.Lock, new TimeSpan(0, 1, 0));
-      mainForm.UpdateForm(tracker);
-      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetInactiveColor()));
-
-      AddEvent(tracker, TrackableEvent.EventType.Lock, new TimeSpan(0, 2, 0));
-      mainForm.UpdateForm(tracker);
-      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetInactiveColor()));
-
-      AddEvent(tracker, TrackableEvent.EventType.Unlock, new TimeSpan(0, 3, 0));
-      mainForm.UpdateForm(tracker);
-      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetActiveColor()));
-
-      AddEvent(tracker, TrackableEvent.EventType.Unlock, new TimeSpan(0, 4, 0));
-      mainForm.UpdateForm(tracker);
-      Assert.That(mainForm.GetLastPeriodPanelColor(), Is.EqualTo(mainForm.GetActiveColor()));
+    /// <summary>
+    /// Adds an event and checks that the last time period has expected values.
+    /// </summary>
+    /// <param name="tracker">Time tracker to test.</param>
+    /// <param name="type">Type of event to add.</param>
+    private void CheckLastPeriod(TimeTracker tracker,
+                                 TrackableEvent.EventType type)
+    {
+      TrackableEvent previousEvent = tracker.LastEvent;
+      AddEvent(tracker, type, new TimeSpan(0, 1, 0));
+      TimePeriod period = tracker.LastCompletedTimePeriod;
+      TimePeriod.PeriodType expectedType =
+        (previousEvent.Activity == TrackableEvent.EventActivity.Active) ?
+        TimePeriod.PeriodType.Active : TimePeriod.PeriodType.Inactive;
+      Assert.That(period.Type, Is.EqualTo(expectedType));
+      Assert.That(period.Duration,
+                  Is.EqualTo(tracker.LastEvent.Time.Subtract(previousEvent.Time)));
     }
   }
 }

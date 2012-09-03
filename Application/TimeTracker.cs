@@ -31,6 +31,46 @@ namespace ComputerTimeTracker
     public TrackableEvent LastEvent { get { return Events[Events.Count - 1]; } }
 
     /// <summary>
+    /// Gets all completed time periods between events tracked by the tracker.
+    /// A completed time period is one whose starting and ending events have occurred.
+    /// </summary>
+    public IList<TimePeriod> CompletedPeriods
+    {
+      get
+      {
+        IList<TimePeriod> periods = new List<TimePeriod>();
+        TrackableEvent previousEvent = null;
+        foreach (TrackableEvent currentEvent in Events)
+        {
+          if (previousEvent != null)
+          {
+            periods.Add(new TimePeriod((previousEvent.Activity ==
+                                        TrackableEvent.EventActivity.Active) ?
+                                       TimePeriod.PeriodType.Active :
+                                       TimePeriod.PeriodType.Inactive,
+                                       currentEvent.Time.Subtract(previousEvent.Time)));
+          }
+          previousEvent = currentEvent;
+        }
+        return periods;
+      }
+    }
+
+    /// <summary>
+    /// Gets the last completed time period. A completed time period is
+    /// one whose starting and ending events have occurred.
+    /// </summary>
+    /// <returns>Last completed time period or null if none exists.</returns>
+    public TimePeriod LastCompletedTimePeriod
+    {
+      get
+      {
+        IList<TimePeriod> periods = CompletedPeriods;
+        return (periods.Count > 0) ? periods[periods.Count - 1] : null;
+      }
+    }
+
+    /// <summary>
     /// Creates a TimeTracker instance.
     /// </summary>
     /// <param name="startTime">Computer usage start time.</param>
@@ -49,6 +89,21 @@ namespace ComputerTimeTracker
     public TimeSpan GetWorkTime(DateTime currentTime)
     {
       return currentTime.Subtract(StartTime);
+    }
+
+    /// <summary>
+    /// Gets all tracked time periods.
+    /// </summary>
+    /// <param name="currentTime">Current time. Needed for calculating the
+    /// duration of the current time period.</param>
+    /// <returns>All time periods.</returns>
+    public IList<TimePeriod> GetPeriods(DateTime currentTime)
+    {
+      IList<TimePeriod> periods = CompletedPeriods;
+      periods.Add(new TimePeriod((LastEvent.Activity == TrackableEvent.EventActivity.Active) ?
+                                 TimePeriod.PeriodType.Active : TimePeriod.PeriodType.Inactive,
+                                 currentTime.Subtract(LastEvent.Time)));
+      return periods;
     }
   }
 }
