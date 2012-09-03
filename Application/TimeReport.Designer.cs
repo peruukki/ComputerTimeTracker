@@ -37,6 +37,10 @@ namespace ComputerTimeTracker
       this._lblTimeCurrent = new System.Windows.Forms.Label();
       this._pnlPeriod1 = new System.Windows.Forms.Panel();
       this._pnlPeriod2 = new System.Windows.Forms.Panel();
+      this._lblPeriodDuration1 = new System.Windows.Forms.Label();
+      this._lblPeriodDuration2 = new System.Windows.Forms.Label();
+      this._pnlPeriod1.SuspendLayout();
+      this._pnlPeriod2.SuspendLayout();
       this.SuspendLayout();
       // 
       // _lblTimeStart
@@ -116,6 +120,7 @@ namespace ComputerTimeTracker
       this._pnlPeriod1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
       this._pnlPeriod1.BackColor = System.Drawing.Color.Green;
+      this._pnlPeriod1.Controls.Add(this._lblPeriodDuration1);
       this._pnlPeriod1.Location = new System.Drawing.Point(17, 22);
       this._pnlPeriod1.Name = "_pnlPeriod1";
       this._pnlPeriod1.Size = new System.Drawing.Size(75, 21);
@@ -127,11 +132,38 @@ namespace ComputerTimeTracker
       this._pnlPeriod2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
       this._pnlPeriod2.BackColor = System.Drawing.Color.YellowGreen;
+      this._pnlPeriod2.Controls.Add(this._lblPeriodDuration2);
       this._pnlPeriod2.Location = new System.Drawing.Point(17, 42);
       this._pnlPeriod2.Name = "_pnlPeriod2";
       this._pnlPeriod2.Size = new System.Drawing.Size(75, 21);
       this._pnlPeriod2.TabIndex = 8;
       this._pnlPeriod2.Visible = false;
+      // 
+      // _lblPeriodDuration1
+      // 
+      this._lblPeriodDuration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                  | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._lblPeriodDuration1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+      this._lblPeriodDuration1.Location = new System.Drawing.Point(0, 0);
+      this._lblPeriodDuration1.Name = "_lblPeriodDuration1";
+      this._lblPeriodDuration1.Size = new System.Drawing.Size(75, 21);
+      this._lblPeriodDuration1.TabIndex = 0;
+      this._lblPeriodDuration1.Text = "1:30:30";
+      this._lblPeriodDuration1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // _lblPeriodDuration2
+      // 
+      this._lblPeriodDuration2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                  | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._lblPeriodDuration2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+      this._lblPeriodDuration2.Location = new System.Drawing.Point(0, 0);
+      this._lblPeriodDuration2.Name = "_lblPeriodDuration2";
+      this._lblPeriodDuration2.Size = new System.Drawing.Size(75, 21);
+      this._lblPeriodDuration2.TabIndex = 1;
+      this._lblPeriodDuration2.Text = "10:26";
+      this._lblPeriodDuration2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // TimeReport
       // 
@@ -156,6 +188,8 @@ namespace ComputerTimeTracker
       this.Name = "TimeReport";
       this.ShowIcon = false;
       this.Text = "Time Report";
+      this._pnlPeriod1.ResumeLayout(false);
+      this._pnlPeriod2.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -172,6 +206,8 @@ namespace ComputerTimeTracker
     private System.Windows.Forms.Label _lblTimeCurrent;
     private System.Windows.Forms.Panel _pnlPeriod1;
     private System.Windows.Forms.Panel _pnlPeriod2;
+    private System.Windows.Forms.Label _lblPeriodDuration1;
+    private System.Windows.Forms.Label _lblPeriodDuration2;
   }
 }
 
