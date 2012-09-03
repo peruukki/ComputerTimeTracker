@@ -64,15 +64,11 @@ namespace ComputerTimeTracker
     /// Updates the labels that describe tracked events.
     /// </summary>
     /// <param name="timeTracker">Time tracker.</param>
-    /// <param name="currentTime">Current time.</param>
-    private void UpdateEventContent(TimeTracker timeTracker, DateTime currentTime)
+    private void UpdateEventContent(TimeTracker timeTracker)
     {
       int timeLeft = _lblTimeStart.Left;
       int descriptionLeft = _lblTextStart.Left;
-      int panelLeft = _pnlPeriod1.Left;
       int top = _lblTextStart.Top;
-      int panelTop = _pnlPeriod1.Top;
-      Size panelSize = _pnlPeriod1.Size;
       int labelCount = 0;
 
       foreach (TrackableEvent trackableEvent in timeTracker.Events)
@@ -95,6 +91,21 @@ namespace ComputerTimeTracker
         labelCount++;
       }
 
+      // Adjust the height; the initial height can fit one event
+      Height = FORM_INITIAL_HEIGHT + ((labelCount - 1) * EVENT_LABEL_HEIGHT);
+    }
+
+    /// <summary>
+    /// Updates the components that describe time periods between tracked events.
+    /// </summary>
+    /// <param name="timeTracker">Time tracker.</param>
+    /// <param name="currentTime">Current time.</param>
+    private void UpdateTimePeriodContent(TimeTracker timeTracker, DateTime currentTime)
+    {
+      int panelLeft = _pnlPeriod1.Left;
+      int panelTop = _pnlPeriod1.Top;
+      Size panelSize = _pnlPeriod1.Size;
+
       foreach (TimePeriod period in timeTracker.GetPeriods(currentTime))
       {
         Panel periodLabel = new Panel();
@@ -108,9 +119,6 @@ namespace ComputerTimeTracker
 
         panelTop += EVENT_LABEL_HEIGHT;
       }
-
-      // Adjust the height; the initial height can fit one event
-      Height = FORM_INITIAL_HEIGHT + ((labelCount - 1) * EVENT_LABEL_HEIGHT);
     }
 
     /// <summary>
@@ -174,7 +182,8 @@ namespace ComputerTimeTracker
       _dynamicControls.Clear();
 
       DateTime now = DateTime.Now;
-      UpdateEventContent(timeTracker, now);
+      UpdateEventContent(timeTracker);
+      UpdateTimePeriodContent(timeTracker, now);
       UpdateStaticContent(timeTracker, now);
     }
 
