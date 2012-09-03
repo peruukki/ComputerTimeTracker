@@ -10,16 +10,28 @@ namespace ComputerTimeTracker
   public interface IMainForm
   {
     /// <summary>
-    /// Gets the color to indicate an active period.
+    /// Gets the background color of an active period.
     /// </summary>
-    /// <returns>Active color.</returns>
-    Color GetActiveColor();
+    /// <returns>Active background color.</returns>
+    Color GetActiveColorBackground();
 
     /// <summary>
-    /// Gets the color to indicate an inactive period.
+    /// Gets the foreground color of an active period.
     /// </summary>
-    /// <returns>Inactive color.</returns>
-    Color GetInactiveColor();
+    /// <returns>Active foreground color.</returns>
+    Color GetActiveColorForeground();
+
+    /// <summary>
+    /// Gets the background color of an inactive period.
+    /// </summary>
+    /// <returns>Inactive background color.</returns>
+    Color GetInactiveColorBackground();
+
+    /// <summary>
+    /// Gets the foreground color of an inactive period.
+    /// </summary>
+    /// <returns>Inactive foreground color.</returns>
+    Color GetInactiveColorForeground();
 
     /// <summary>
     /// Gets the color of the last of the panels that illustrate the periods
