@@ -255,9 +255,7 @@ namespace TesterNUnit
       TrackableEvent previousEvent = tracker.LastEvent;
       AddEvent(tracker, type, new TimeSpan(0, 1, 0));
       TimePeriod period = tracker.LastCompletedTimePeriod;
-      TimePeriod.PeriodType expectedType =
-        (previousEvent.Activity == TrackableEvent.EventActivity.Active) ?
-        TimePeriod.PeriodType.Active : TimePeriod.PeriodType.Inactive;
+      TimePeriod.PeriodType expectedType = TimeTracker.GetPeriodTypeFromEvent(previousEvent.Activity);
       Assert.That(period.Type, Is.EqualTo(expectedType));
       Assert.That(period.Duration,
                   Is.EqualTo(tracker.LastEvent.Time.Subtract(previousEvent.Time)));

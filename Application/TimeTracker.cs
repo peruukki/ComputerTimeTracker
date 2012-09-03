@@ -71,6 +71,17 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
+    /// Gets the time period from its starting event activity type.
+    /// </summary>
+    /// <param name="activity">Starting event activity type.</param>
+    /// <returns>Time period type.</returns>
+    public static TimePeriod.PeriodType GetPeriodTypeFromEvent(TrackableEvent.EventActivity activity)
+    {
+      return (activity == TrackableEvent.EventActivity.Active) ?
+             TimePeriod.PeriodType.Active : TimePeriod.PeriodType.Inactive;
+    }
+
+    /// <summary>
     /// Creates a TimeTracker instance.
     /// </summary>
     /// <param name="startTime">Computer usage start time.</param>
@@ -100,8 +111,7 @@ namespace ComputerTimeTracker
     public IList<TimePeriod> GetPeriods(DateTime currentTime)
     {
       IList<TimePeriod> periods = CompletedPeriods;
-      periods.Add(new TimePeriod((LastEvent.Activity == TrackableEvent.EventActivity.Active) ?
-                                 TimePeriod.PeriodType.Active : TimePeriod.PeriodType.Inactive,
+      periods.Add(new TimePeriod(GetPeriodTypeFromEvent(LastEvent.Activity),
                                  currentTime.Subtract(LastEvent.Time)));
       return periods;
     }
