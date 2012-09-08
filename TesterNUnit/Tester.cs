@@ -260,5 +260,34 @@ namespace TesterNUnit
       Assert.That(period.Duration,
                   Is.EqualTo(tracker.LastEvent.Time.Subtract(previousEvent.Time)));
     }
+
+    /// <summary>
+    /// Verifies that time period durations are calculated as expected.
+    /// </summary>
+    [Test]
+    public void CheckTimePeriodDuration()
+    {
+      DateTime time = DateTime.Now;
+      TimeSpan duration;
+
+      duration = TimeTracker.GetPeriodDuration(time, time.AddDays(1));
+      Assert.That(duration, Is.EqualTo(new TimeSpan(24, 0, 0)));
+
+      duration = TimeTracker.GetPeriodDuration(time, time.AddHours(1));
+      Assert.That(duration, Is.EqualTo(new TimeSpan(1, 0, 0)));
+
+      duration = TimeTracker.GetPeriodDuration(time, time.AddMinutes(1));
+      Assert.That(duration, Is.EqualTo(new TimeSpan(0, 1, 0)));
+
+      duration = TimeTracker.GetPeriodDuration(time, time.AddSeconds(1));
+      Assert.That(duration, Is.EqualTo(new TimeSpan(0, 0, 1)));
+
+      duration = TimeTracker.GetPeriodDuration(time, time.AddMilliseconds(1));
+      Assert.That(duration, Is.EqualTo(new TimeSpan(0, 0, 0)));
+
+      time = new DateTime(1, 1, 1, 1, 1, 1, 100);
+      duration = TimeTracker.GetPeriodDuration(time, time.AddMilliseconds(900));
+      Assert.That(duration, Is.EqualTo(new TimeSpan(0, 0, 1)));
+    }
   }
 }

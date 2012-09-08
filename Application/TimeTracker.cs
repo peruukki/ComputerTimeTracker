@@ -45,7 +45,8 @@ namespace ComputerTimeTracker
           if (previousEvent != null)
           {
             periods.Add(new TimePeriod(GetPeriodTypeFromEvent(previousEvent.Activity),
-                                       currentEvent.Time.Subtract(previousEvent.Time)));
+                                       GetPeriodDuration(previousEvent.Time,
+                                                         currentEvent.Time)));
           }
           previousEvent = currentEvent;
         }
@@ -109,8 +110,31 @@ namespace ComputerTimeTracker
     {
       IList<TimePeriod> periods = CompletedPeriods;
       periods.Add(new TimePeriod(GetPeriodTypeFromEvent(LastEvent.Activity),
-                                 currentTime.Subtract(LastEvent.Time)));
+                                 GetPeriodDuration(LastEvent.Time, currentTime)));
       return periods;
+    }
+
+    /// <summary>
+    /// Gets the period duration from its start time and end time, ignoring milliseconds
+    /// and rounding up the seconds correctly.
+    /// </summary>
+    /// <param name="startTime">Time period start time.</param>
+    /// <param name="endTime">Time period end time.</param>
+    /// <returns>Time period duration.</returns>
+    public static TimeSpan GetPeriodDuration(DateTime startTime, DateTime endTime)
+    {
+      TimeSpan subtraction = endTime.Subtract(startTime);
+
+      // Clear milliseconds
+      subtraction = subtraction.Subtract(new TimeSpan(0, 0, 0, 0, subtraction.Milliseconds));
+
+      // One second may need to be added to round up
+      if (endTime.Millisecond < startTime.Millisecond)
+      {
+        subtraction = subtraction.Add(new TimeSpan(0, 0, 1));
+      }
+
+      return subtraction;
     }
   }
 }
