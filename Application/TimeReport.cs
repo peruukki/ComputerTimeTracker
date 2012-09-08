@@ -112,7 +112,7 @@ namespace ComputerTimeTracker
         periodPanel.Size = panelSize;
         periodPanel.Location = new Point(panelLeft, panelTop);
         periodPanel.BackColor = (period.Type == TimePeriod.PeriodType.Active) ?
-                                GetActiveColorBackground() : GetInactiveColorBackground();
+                                GetActiveBackColor() : GetInactiveBackColor();
         _lastPeriodPanelColor = periodPanel.BackColor;
         Controls.Add(periodPanel);
         _dynamicControls.Add(periodPanel);
@@ -148,22 +148,22 @@ namespace ComputerTimeTracker
 
     #region IMainForm Members
 
-    public Color GetActiveColorBackground()
+    public Color GetActiveBackColor()
     {
       return Color.Green;
     }
 
-    public Color GetActiveColorForeground()
+    public Color GetActiveForeColor()
     {
       return SystemColors.ControlLightLight;
     }
 
-    public Color GetInactiveColorBackground()
+    public Color GetInactiveBackColor()
     {
       return Color.YellowGreen;
     }
 
-    public Color GetInactiveColorForeground()
+    public Color GetInactiveForeColor()
     {
       return SystemColors.ControlDarkDark;
     }

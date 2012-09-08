@@ -13,25 +13,25 @@ namespace ComputerTimeTracker
     /// Gets the background color of an active period.
     /// </summary>
     /// <returns>Active background color.</returns>
-    Color GetActiveColorBackground();
+    Color GetActiveBackColor();
 
     /// <summary>
     /// Gets the foreground color of an active period.
     /// </summary>
     /// <returns>Active foreground color.</returns>
-    Color GetActiveColorForeground();
+    Color GetActiveForeColor();
 
     /// <summary>
     /// Gets the background color of an inactive period.
     /// </summary>
     /// <returns>Inactive background color.</returns>
-    Color GetInactiveColorBackground();
+    Color GetInactiveBackColor();
 
     /// <summary>
     /// Gets the foreground color of an inactive period.
     /// </summary>
     /// <returns>Inactive foreground color.</returns>
-    Color GetInactiveColorForeground();
+    Color GetInactiveForeColor();
 
     /// <summary>
     /// Gets the color of the last of the panels that illustrate the periods
