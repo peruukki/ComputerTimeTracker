@@ -38,6 +38,25 @@ namespace ComputerTimeTracker
     private readonly TimeSpan _duration;
 
     /// <summary>
+    /// Gets the textual representation of the period duration.
+    /// </summary>
+    public string DurationText
+    {
+      get
+      {
+        if (Duration.Hours > 0)
+        {
+          return String.Format("{0}:{1:0#}:{2:0#}", Duration.Hours,
+                               Duration.Minutes, Duration.Seconds);
+        }
+        else
+        {
+          return String.Format("{0}:{1:0#}", Duration.Minutes, Duration.Seconds);
+        }
+      }
+    }
+
+    /// <summary>
     /// Creates a new time period.
     /// </summary>
     /// <param name="type">Period type.</param>

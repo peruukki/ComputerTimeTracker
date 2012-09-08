@@ -117,6 +117,15 @@ namespace ComputerTimeTracker
         Controls.Add(periodPanel);
         _dynamicControls.Add(periodPanel);
 
+        Label periodDurationLabel = new Label();
+        periodDurationLabel.Size = periodPanel.Size;
+        periodDurationLabel.Location = new Point(0, 0);
+        periodDurationLabel.TextAlign = ContentAlignment.MiddleCenter;
+        periodDurationLabel.ForeColor = (period.Type == TimePeriod.PeriodType.Active) ?
+                                        GetActiveForeColor() : GetInactiveForeColor();
+        periodDurationLabel.Text = period.DurationText;
+        periodPanel.Controls.Add(periodDurationLabel);
+
         panelTop += EVENT_LABEL_HEIGHT;
       }
     }
