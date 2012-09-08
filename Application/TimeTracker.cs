@@ -44,10 +44,7 @@ namespace ComputerTimeTracker
         {
           if (previousEvent != null)
           {
-            periods.Add(new TimePeriod((previousEvent.Activity ==
-                                        TrackableEvent.EventActivity.Active) ?
-                                       TimePeriod.PeriodType.Active :
-                                       TimePeriod.PeriodType.Inactive,
+            periods.Add(new TimePeriod(GetPeriodTypeFromEvent(previousEvent.Activity),
                                        currentEvent.Time.Subtract(previousEvent.Time)));
           }
           previousEvent = currentEvent;
