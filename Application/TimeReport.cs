@@ -108,14 +108,14 @@ namespace ComputerTimeTracker
 
       foreach (TimePeriod period in timeTracker.GetPeriods(currentTime))
       {
-        Panel periodLabel = new Panel();
-        periodLabel.Size = panelSize;
-        periodLabel.Location = new Point(panelLeft, panelTop);
-        periodLabel.BackColor = (period.Type == TimePeriod.PeriodType.Active) ?
+        Panel periodPanel = new Panel();
+        periodPanel.Size = panelSize;
+        periodPanel.Location = new Point(panelLeft, panelTop);
+        periodPanel.BackColor = (period.Type == TimePeriod.PeriodType.Active) ?
                                 GetActiveColorBackground() : GetInactiveColorBackground();
-        _lastPeriodPanelColor = periodLabel.BackColor;
-        Controls.Add(periodLabel);
-        _dynamicControls.Add(periodLabel);
+        _lastPeriodPanelColor = periodPanel.BackColor;
+        Controls.Add(periodPanel);
+        _dynamicControls.Add(periodPanel);
 
         panelTop += EVENT_LABEL_HEIGHT;
       }
