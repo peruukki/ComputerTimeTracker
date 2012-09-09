@@ -7,11 +7,22 @@ namespace ComputerTimeTracker
   /// <summary>
   /// Represents the current system time.
   /// </summary>
-  public class SystemClock: IClock
+  public class SystemClock: Clock
   {
     /// <summary>
-    /// Returns the current system time.
+    /// Gets the current system time.
     /// </summary>
-    public DateTime Now { get { return DateTime.Now; } }
+    public override DateTime Now
+    {
+      get
+      {
+        return CreateValidTime(DateTime.Now);
+      }
+
+      set
+      {
+        throw new InvalidOperationException("The current time of a SystemClock cannot be set.");
+      }
+    }
   }
 }

@@ -182,7 +182,7 @@ namespace ComputerTimeTracker
       return _lastPeriodPanelColor;
     }
 
-    public void UpdateForm(TimeTracker timeTracker, IClock clock)
+    public void UpdateForm(TimeTracker timeTracker, Clock clock)
     {
       foreach (Control component in _dynamicControls)
       {

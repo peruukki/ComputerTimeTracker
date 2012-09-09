@@ -27,13 +27,13 @@ namespace ComputerTimeTracker
     private NotifyIcon _notifyIcon;
     private IContainer _components;
 
-    private IClock _clock;
+    private Clock _clock;
 
     /// <summary>
     /// Creates a new CustomApplicationContext instance.
     /// </summary>
     /// <param name="clock">The clock to use for getting the current time.</param>
-    public NotifyIconApplicationContext(IClock clock)
+    public NotifyIconApplicationContext(Clock clock)
       : this(clock, false)
     {
     }
@@ -45,7 +45,7 @@ namespace ComputerTimeTracker
     /// <param name="clock">The clock to use for getting the current time.</param>
     /// <param name="forceUpdateStartTime">Whether time tracker start time is
     /// forcefully updated to the application launch time.</param>
-    public NotifyIconApplicationContext(IClock clock, bool forceUpdateStartTime)
+    public NotifyIconApplicationContext(Clock clock, bool forceUpdateStartTime)
     {
       UpdateTimeTrackerStartTime(clock.Now, forceUpdateStartTime);
       _reportForm = new TimeReport();

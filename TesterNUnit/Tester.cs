@@ -283,13 +283,33 @@ namespace TesterNUnit
 
       duration = TimeTracker.GetPeriodDuration(time, time.AddSeconds(1));
       Assert.That(duration, Is.EqualTo(new TimeSpan(0, 0, 1)));
+    }
 
-      duration = TimeTracker.GetPeriodDuration(time, time.AddMilliseconds(1));
-      Assert.That(duration, Is.EqualTo(new TimeSpan(0, 0, 0)));
+    /// <summary>
+    /// Verifies that an exception is thrown if a time period duration is calculated
+    /// with a time that has milliseconds.
+    /// </summary>
+    [Test]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CheckInvalidTimePeriodDuration()
+    {
+      DateTime time = new SystemClock().Now;
+      TimeTracker.GetPeriodDuration(time, time.AddMilliseconds(1));
+    }
 
-      time = new DateTime(1, 1, 1, 1, 1, 1, 100);
-      duration = TimeTracker.GetPeriodDuration(time, time.AddMilliseconds(900));
-      Assert.That(duration, Is.EqualTo(new TimeSpan(0, 0, 1)));
+    /// <summary>
+    /// Verifies that the system clock returns expected times.
+    /// </summary>
+    [Test]
+    public void CheckSystemClock()
+    {
+      Clock clock = new SystemClock();
+
+      // The current time must always have zero milliseconds
+      for (int i = 0; i < 5; i++)
+      {
+        Assert.That(clock.Now.Millisecond, Is.EqualTo(0));
+      }
     }
   }
 }

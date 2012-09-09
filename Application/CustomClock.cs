@@ -5,12 +5,12 @@ namespace ComputerTimeTracker
   /// <summary>
   /// Represents a current time that can be set freely.
   /// </summary>
-  public class CustomClock: IClock
+  public class CustomClock: Clock
   {
     /// <summary>
     /// Sets or gets the current time.
     /// </summary>
-    public DateTime Now { get { return _now; } set { _now = value; } }
+    public override DateTime Now { get { return _now; } set { _now = CreateValidTime(value); } }
     private DateTime _now;
 
     /// <summary>

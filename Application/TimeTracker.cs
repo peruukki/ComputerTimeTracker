@@ -123,18 +123,19 @@ namespace ComputerTimeTracker
     /// <returns>Time period duration.</returns>
     public static TimeSpan GetPeriodDuration(DateTime startTime, DateTime endTime)
     {
-      TimeSpan subtraction = endTime.Subtract(startTime);
-
-      // Clear milliseconds
-      subtraction = subtraction.Subtract(new TimeSpan(0, 0, 0, 0, subtraction.Milliseconds));
-
-      // One second may need to be added to round up
-      if (endTime.Millisecond < startTime.Millisecond)
+      if (!Clock.IsValidTime(startTime))
       {
-        subtraction = subtraction.Add(new TimeSpan(0, 0, 1));
+        throw new ArgumentOutOfRangeException("startTime", startTime,
+                                              "The period start time is invalid " +
+                                              "(probably too precise).");
       }
-
-      return subtraction;
+      if (!Clock.IsValidTime(endTime))
+      {
+        throw new ArgumentOutOfRangeException("endTime", endTime,
+                                              "The period end time is invalid " +
+                                              "(probably too precise).");
+      }
+      return endTime.Subtract(startTime);
     }
   }
 }

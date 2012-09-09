@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomClock.cs" />
-    <Compile Include="IClock.cs" />
+    <Compile Include="Clock.cs" />
     <Compile Include="IMainForm.cs" />
     <Compile Include="NotifyIconApplicationContext.cs" />
     <Compile Include="Settings.cs" />
