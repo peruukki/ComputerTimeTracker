@@ -17,7 +17,7 @@ namespace ComputerTimeTracker
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new NotifyIconApplicationContext(DateTime.Now));
+      Application.Run(new NotifyIconApplicationContext(new SystemClock()));
     }
   }
 }

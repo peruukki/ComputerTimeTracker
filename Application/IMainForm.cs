@@ -44,7 +44,8 @@ namespace ComputerTimeTracker
     /// Updates the main form based on the given time tracker state.
     /// </summary>
     /// <param name="timeTracker">Time tracker.</param>
-    void UpdateForm(TimeTracker timeTracker);
+    /// <param name="clock">The clock to use for getting the current time.</param>
+    void UpdateForm(TimeTracker timeTracker, IClock clock);
 
     /// <summary>
     /// Called before the main form is closed.

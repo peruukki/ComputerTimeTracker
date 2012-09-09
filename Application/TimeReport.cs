@@ -182,7 +182,7 @@ namespace ComputerTimeTracker
       return _lastPeriodPanelColor;
     }
 
-    public void UpdateForm(TimeTracker timeTracker)
+    public void UpdateForm(TimeTracker timeTracker, IClock clock)
     {
       foreach (Control component in _dynamicControls)
       {
@@ -190,7 +190,7 @@ namespace ComputerTimeTracker
       }
       _dynamicControls.Clear();
 
-      DateTime now = DateTime.Now;
+      DateTime now = clock.Now;
       UpdateEventContent(timeTracker);
       UpdateTimePeriodContent(timeTracker, now);
       UpdateStaticContent(timeTracker, now);

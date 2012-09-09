@@ -32,15 +32,9 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Creates a new CustomApplicationContext instance.
     /// </summary>
-    /// <param name="appLaunchTime">Application launch time.</param>
-    public NotifyIconApplicationContext(DateTime appLaunchTime)
-      : this(appLaunchTime, false)
-    {
-    }
-
-    public NotifyIconApplicationContext(DateTime appLaunchTime,
-                                        bool forceUpdateStartTime)
-        : this(appLaunchTime, forceUpdateStartTime, new SystemClock())
+    /// <param name="clock">The clock to use for getting the current time.</param>
+    public NotifyIconApplicationContext(IClock clock)
+      : this(clock, false)
     {
     }
 
@@ -48,15 +42,12 @@ namespace ComputerTimeTracker
     /// Creates a new CustomApplicationContext instance, possibly forcing
     /// update of the time tracker start time.
     /// </summary>
-    /// <param name="appLaunchTime">Application launch time.</param>
-    /// <param name="forceUpdateStartTime">Whether time tracker start time is
     /// <param name="clock">The clock to use for getting the current time.</param>
+    /// <param name="forceUpdateStartTime">Whether time tracker start time is
     /// forcefully updated to the application launch time.</param>
-    public NotifyIconApplicationContext(DateTime appLaunchTime,
-                                        bool forceUpdateStartTime,
-                                        IClock clock)
+    public NotifyIconApplicationContext(IClock clock, bool forceUpdateStartTime)
     {
-      UpdateTimeTrackerStartTime(appLaunchTime, forceUpdateStartTime);
+      UpdateTimeTrackerStartTime(clock.Now, forceUpdateStartTime);
       _reportForm = new TimeReport();
       _components = new Container();
       _clock = clock;
@@ -124,6 +115,8 @@ namespace ComputerTimeTracker
     /// if necessary and returns its current value.
     /// </summary>
     /// <param name="appLaunchTime">Current application launch time.</param>
+    /// <param name="forceUpdateStartTime">Whether time tracker start time is
+    /// forcefully updated to the application launch time.</param>
     private void UpdateTimeTrackerStartTime(DateTime appLaunchTime,
                                             bool forceUpdateStartTime)
     {
@@ -216,7 +209,7 @@ namespace ComputerTimeTracker
     /// <param name="e">Ignored.</param>
     public void ShowReport(object Sender, EventArgs e)
     {
-      _reportForm.UpdateForm(_timeTracker);
+      _reportForm.UpdateForm(_timeTracker, _clock);
       _reportForm.Show();
       _reportForm.Activate();
     }

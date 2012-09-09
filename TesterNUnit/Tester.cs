@@ -45,7 +45,7 @@ namespace TesterNUnit
     [Test]
     public void RunApplication()
     {
-      _context = new NotifyIconApplicationContext(DateTime.Now);
+      _context = new NotifyIconApplicationContext(new SystemClock());
       _context.ShowReport(null, null);
     }
 
@@ -55,7 +55,7 @@ namespace TesterNUnit
     [Test]
     public void CloseMainForm()
     {
-      _context = new NotifyIconApplicationContext(DateTime.Now);
+      _context = new NotifyIconApplicationContext(new SystemClock());
 
       Console.WriteLine("User closing main form");
       FormClosingEventArgs e1 = new FormClosingEventArgs(CloseReason.UserClosing, false);
@@ -74,7 +74,7 @@ namespace TesterNUnit
     [Test]
     public void CheckStartTime()
     {
-      DateTime now = DateTime.Now;
+      DateTime now = new SystemClock().Now;
       TimeTracker tracker = new TimeTracker(now);
       Console.WriteLine("Checking start time " + now);
       Assert.That(tracker.StartTime, Is.EqualTo(now));
@@ -88,25 +88,27 @@ namespace TesterNUnit
     [Test]
     public void CheckStartTimeAfterRestarts()
     {
-      DateTime launchTime1 = new DateTime(2012, 1, 1, 1, 1, 1);
-
       // Run the application, forcing the start time to be updated
-      Console.WriteLine("Launching application at " + launchTime1);
-      _context = new NotifyIconApplicationContext(launchTime1, true);
+      DateTime launchTime1 = new DateTime(2012, 1, 1, 1, 1, 1);
+      CustomClock clock = new CustomClock(launchTime1);
+      Console.WriteLine("Launching application at " + clock.Now);
+      _context = new NotifyIconApplicationContext(clock, true);
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
       _context.Exit();
 
       // Run the application again on the same day
       DateTime launchTime2 = launchTime1.AddMinutes(1);
-      Console.WriteLine("Launching application at " + launchTime2);
-      _context = new NotifyIconApplicationContext(launchTime2);
+      clock.Now = launchTime2;
+      Console.WriteLine("Launching application at " + clock.Now);
+      _context = new NotifyIconApplicationContext(clock);
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(launchTime1));
       _context.Exit();
 
       // Run the application again on the next day
       DateTime launchTime3 = launchTime1.AddDays(1);
-      Console.WriteLine("Launching application at " + launchTime3);
-      _context = new NotifyIconApplicationContext(launchTime3);
+      clock.Now = launchTime3;
+      Console.WriteLine("Launching application at " + clock.Now);
+      _context = new NotifyIconApplicationContext(clock);
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(launchTime3));
 
       // The context will be exited in TearDown
@@ -120,7 +122,7 @@ namespace TesterNUnit
     public void HandleSessionEvents()
     {
       CustomClock clock = new CustomClock(new DateTime(2012, 1, 1, 1, 1, 1));
-      _context = new NotifyIconApplicationContext(clock.Now, true, clock);
+      _context = new NotifyIconApplicationContext(clock, true);
 
       Console.WriteLine("Session locked at " + clock.Now);
       int eventCount = _context.TimeTracker.Events.Count;
@@ -165,7 +167,7 @@ namespace TesterNUnit
       CustomClock clock = new CustomClock(new DateTime(2012, 1, 1, 1, 1, 1));
 
       Console.WriteLine("Starting application at " + clock.Now);
-      _context = new NotifyIconApplicationContext(clock.Now, true, clock);
+      _context = new NotifyIconApplicationContext(clock, true);
 
       clock.Now = clock.Now.AddHours(1);
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
@@ -178,7 +180,7 @@ namespace TesterNUnit
 
       clock.Now = clock.Now.AddHours(1);
       Console.WriteLine("Restarting application at " + clock.Now);
-      _context = new NotifyIconApplicationContext(clock.Now, false, clock);
+      _context = new NotifyIconApplicationContext(clock, false);
       Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(eventCount));
     }
 
@@ -188,7 +190,7 @@ namespace TesterNUnit
     [Test]
     public void AddEvents()
     {
-      TimeTracker tracker = new TimeTracker(DateTime.Now);
+      TimeTracker tracker = new TimeTracker(new SystemClock().Now);
       AddEvent(tracker, TrackableEvent.EventType.Lock, new TimeSpan(0, 5, 0));
       AddEvent(tracker, TrackableEvent.EventType.Unlock, new TimeSpan(1, 5, 0));
     }
@@ -223,7 +225,7 @@ namespace TesterNUnit
     [Test]
     public void CheckWorkTime()
     {
-      DateTime startTime = DateTime.Now;
+      DateTime startTime = new SystemClock().Now;
       TimeTracker tracker = new TimeTracker(startTime);
       TimeSpan workTime = new TimeSpan(1, 2, 3);
       Assert.That(tracker.GetWorkTime(startTime.Add(workTime)), Is.EqualTo(workTime));
@@ -235,7 +237,7 @@ namespace TesterNUnit
     [Test]
     public void CheckTimePeriods()
     {
-      _context = new NotifyIconApplicationContext(DateTime.Now);
+      _context = new NotifyIconApplicationContext(new SystemClock());
 
       TimeTracker tracker = _context.TimeTracker;
       CheckLastPeriod(tracker, TrackableEvent.EventType.Lock);
@@ -267,7 +269,7 @@ namespace TesterNUnit
     [Test]
     public void CheckTimePeriodDuration()
     {
-      DateTime time = DateTime.Now;
+      DateTime time = new SystemClock().Now;
       TimeSpan duration;
 
       duration = TimeTracker.GetPeriodDuration(time, time.AddDays(1));
