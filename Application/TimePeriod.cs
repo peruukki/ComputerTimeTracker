@@ -38,6 +38,12 @@ namespace ComputerTimeTracker
     private readonly TimeSpan _duration;
 
     /// <summary>
+    /// Gets or sets the value that tells if the period is considered work time.
+    /// </summary>
+    public bool IsWorkTime { get { return _isWorkTime; } set { _isWorkTime = value; } }
+    private bool _isWorkTime = true;
+
+    /// <summary>
     /// Gets the textual representation of the period duration.
     /// </summary>
     public string DurationText

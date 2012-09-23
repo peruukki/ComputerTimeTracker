@@ -97,9 +97,8 @@ namespace ComputerTimeTracker
           (trackableEvent.Type == TrackableEvent.EventType.Unlock))
       {
         // The new event starts a new work day
-        tracker.ClearEvents();
-        tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Start,
-                                            trackableEvent.Time));
+        tracker.ClearEvents(new TrackableEvent(TrackableEvent.EventType.Start,
+                                               trackableEvent.Time));
       }
       else
       {

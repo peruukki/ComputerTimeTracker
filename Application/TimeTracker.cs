@@ -17,7 +17,18 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Events tracked by the tracker.
     /// </summary>
-    private IList<TrackableEvent> _events;
+    private IList<TrackableEvent> _events = new List<TrackableEvent>();
+
+    /// <summary>
+    /// Completed time periods tracked by the tracker. A completed time period is
+    /// one whose starting and ending events have occurred.
+    /// </summary>
+    private IList<TimePeriod> _completedPeriods = new List<TimePeriod>();
+
+    /// <summary>
+    /// Current, non-completed time period.
+    /// </summary>
+    private TimePeriod _currentTimePeriod;
 
     /// <summary>
     /// Gets the first event in the tracker.
@@ -30,30 +41,6 @@ namespace ComputerTimeTracker
     public TrackableEvent LastEvent { get { return _events[_events.Count - 1]; } }
 
     /// <summary>
-    /// Gets all completed time periods between events tracked by the tracker.
-    /// A completed time period is one whose starting and ending events have occurred.
-    /// </summary>
-    public IList<TimePeriod> CompletedPeriods
-    {
-      get
-      {
-        IList<TimePeriod> periods = new List<TimePeriod>();
-        TrackableEvent previousEvent = null;
-        foreach (TrackableEvent currentEvent in _events)
-        {
-          if (previousEvent != null)
-          {
-            periods.Add(new TimePeriod(GetPeriodTypeFromEvent(previousEvent.Activity),
-                                       GetPeriodDuration(previousEvent.Time,
-                                                         currentEvent.Time)));
-          }
-          previousEvent = currentEvent;
-        }
-        return periods;
-      }
-    }
-
-    /// <summary>
     /// Gets the last completed time period. A completed time period is
     /// one whose starting and ending events have occurred.
     /// </summary>
@@ -62,8 +49,8 @@ namespace ComputerTimeTracker
     {
       get
       {
-        IList<TimePeriod> periods = CompletedPeriods;
-        return (periods.Count > 0) ? periods[periods.Count - 1] : null;
+        return (_completedPeriods.Count > 0) ?
+               _completedPeriods[_completedPeriods.Count - 1] : null;
       }
     }
 
@@ -84,7 +71,6 @@ namespace ComputerTimeTracker
     /// <param name="startTime">Computer usage start time.</param>
     public TimeTracker(DateTime startTime)
     {
-      _events = new List<TrackableEvent>();
       _events.Add(new TrackableEvent(TrackableEvent.EventType.Start, startTime));
     }
 
@@ -97,11 +83,13 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
-    /// Clears all tracked events.
+    /// Clears all tracked events and sets a new start event.
+    /// <param name="startEvent">The new start event.</param>
     /// </summary>
-    public void ClearEvents()
+    public void ClearEvents(TrackableEvent startEvent)
     {
       _events.Clear();
+      _events.Add(startEvent);
     }
 
     /// <summary>
@@ -110,7 +98,18 @@ namespace ComputerTimeTracker
     /// <param name="trackableEvent">Trackable event.</param>
     public void AddEvent(TrackableEvent trackableEvent)
     {
+      TrackableEvent previousEvent = LastEvent;
       _events.Add(trackableEvent);
+
+      TimePeriod newPeriod = new TimePeriod(GetPeriodTypeFromEvent(previousEvent.Activity),
+                                            GetPeriodDuration(previousEvent.Time,
+                                                              trackableEvent.Time));
+      if (_currentTimePeriod != null)
+      {
+        newPeriod.IsWorkTime = _currentTimePeriod.IsWorkTime;
+        _currentTimePeriod = null;
+      }
+      _completedPeriods.Add(newPeriod);
     }
 
     /// <summary>
@@ -121,7 +120,15 @@ namespace ComputerTimeTracker
     /// <returns>Current work time.</returns>
     public TimeSpan GetWorkTime(DateTime currentTime)
     {
-      return currentTime.Subtract(StartTime);
+      TimeSpan workTime = new TimeSpan();
+      foreach (TimePeriod period in GetPeriods(currentTime))
+      {
+        if (period.IsWorkTime)
+        {
+          workTime = workTime.Add(period.Duration);
+        }
+      }
+      return workTime;
     }
 
     /// <summary>
@@ -132,9 +139,13 @@ namespace ComputerTimeTracker
     /// <returns>All time periods.</returns>
     public IList<TimePeriod> GetPeriods(DateTime currentTime)
     {
-      IList<TimePeriod> periods = CompletedPeriods;
-      periods.Add(new TimePeriod(GetPeriodTypeFromEvent(LastEvent.Activity),
-                                 GetPeriodDuration(LastEvent.Time, currentTime)));
+      IList<TimePeriod> periods = new List<TimePeriod>(_completedPeriods);
+      if (_currentTimePeriod == null)
+      {
+        _currentTimePeriod = new TimePeriod(GetPeriodTypeFromEvent(LastEvent.Activity),
+                                            GetPeriodDuration(LastEvent.Time, currentTime));
+      }
+      periods.Add(_currentTimePeriod);
       return periods;
     }
 

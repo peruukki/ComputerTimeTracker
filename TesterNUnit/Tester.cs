@@ -311,5 +311,58 @@ namespace TesterNUnit
         Assert.That(clock.Now.Millisecond, Is.EqualTo(0));
       }
     }
+
+    /// <summary>
+    /// Verifies that the work time is calculated correctly when time period
+    /// work time statuses are changed.
+    /// </summary>
+    [Test]
+    public void ChangeTimePeriodWorkTimeStatus()
+    {
+      Clock clock = new CustomClock(DateTime.Now);
+      _context = new NotifyIconApplicationContext(clock);
+      TimeTracker tracker = _context.TimeTracker;
+
+      // Add some events
+      for (int i = 0; i < 3; i++)
+      {
+        clock.Now = clock.Now.AddMinutes(1);
+        tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Lock, clock.Now));
+        clock.Now = clock.Now.AddMinutes(1);
+        tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Unlock, clock.Now));
+      }
+
+      // Change all time periods to be non-work
+      clock.Now = clock.Now.AddMinutes(1);
+      foreach (TimePeriod period in tracker.GetPeriods(clock.Now))
+      {
+        period.IsWorkTime = false;
+      }
+      Assert.That(tracker.GetWorkTime(clock.Now), Is.EqualTo(new TimeSpan()));
+
+      // Change some periods to work time
+      clock.Now = clock.Now.AddMinutes(1);
+      IList<TimePeriod> periods = tracker.GetPeriods(clock.Now);
+      TimeSpan workTime = new TimeSpan();
+      workTime = SetPeriodToWorkTime(periods, 0, workTime);
+      workTime = SetPeriodToWorkTime(periods, periods.Count - 1, workTime);
+      workTime = SetPeriodToWorkTime(periods, periods.Count / 2, workTime);
+      Assert.That(tracker.GetWorkTime(clock.Now), Is.EqualTo(workTime));
+    }
+
+    /// <summary>
+    /// Marks the time period with the given index as work time and adds the
+    /// period duration to the given work time.
+    /// </summary>
+    /// <param name="periods">Tracked time periods.</param>
+    /// <param name="index">Index of time period to mark.</param>
+    /// <param name="workTime">Work time before the operation.</param>
+    /// <returns>Work time after the operation.</returns>
+    private TimeSpan SetPeriodToWorkTime(IList<TimePeriod> periods, int index,
+                                         TimeSpan workTime)
+    {
+      periods[index].IsWorkTime = true;
+      return workTime.Add(periods[index].Duration);
+    }
   }
 }
