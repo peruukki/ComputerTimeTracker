@@ -46,6 +46,7 @@ namespace ComputerTimeTracker
       // The start labels are only used for helping in layout design
       _lblTimeStart.Visible = false;
       _lblTextStart.Visible = false;
+
       EVENT_LABEL_HEIGHT = _lblTextCurrent.Top - _lblTextStart.Top;
       FORM_INITIAL_HEIGHT = Height;
     }
@@ -106,6 +107,10 @@ namespace ComputerTimeTracker
       int panelTop = _pnlPeriod1.Top;
       Size panelSize = _pnlPeriod1.Size;
 
+      int checkBoxLeft = _chkPeriod1.Left;
+      int checkBoxTop = _chkPeriod1.Top;
+      Size checkBoxSize = _chkPeriod1.Size;
+
       foreach (TimePeriod period in timeTracker.GetPeriods(currentTime))
       {
         Panel periodPanel = new Panel();
@@ -126,7 +131,16 @@ namespace ComputerTimeTracker
         periodDurationLabel.Text = period.DurationText;
         periodPanel.Controls.Add(periodDurationLabel);
 
+        CheckBox periodCheckBox = new CheckBox();
+        periodCheckBox.Size = checkBoxSize;
+        periodCheckBox.Location = new Point(checkBoxLeft, checkBoxTop);
+        periodCheckBox.Checked = true;
+        periodCheckBox.Tag = period;
+        Controls.Add(periodCheckBox);
+        _dynamicControls.Add(periodCheckBox);
+
         panelTop += EVENT_LABEL_HEIGHT;
+        checkBoxTop += EVENT_LABEL_HEIGHT;
       }
     }
 
