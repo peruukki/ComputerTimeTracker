@@ -125,11 +125,11 @@ namespace TesterNUnit
       _context = new NotifyIconApplicationContext(clock, true);
 
       Console.WriteLine("Session locked at " + clock.Now);
-      int eventCount = _context.TimeTracker.Events.Count;
+      int eventCount = _context.TimeTracker.GetEvents().Count;
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
       Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Lock));
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(clock.Now));
-      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(++eventCount));
+      Assert.That(_context.TimeTracker.GetEvents().Count, Is.EqualTo(++eventCount));
 
       // Verify that the start time remains unchanged when a Lock event is received the following day
       clock.Now = clock.Now.AddDays(1);
@@ -138,7 +138,7 @@ namespace TesterNUnit
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
       Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Lock));
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(startTimeBefore));
-      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(++eventCount));
+      Assert.That(_context.TimeTracker.GetEvents().Count, Is.EqualTo(++eventCount));
 
       // Verify that the start time is updated when an Unlock event is received the following day
       clock.Now = clock.Now.AddHours(1);
@@ -146,15 +146,15 @@ namespace TesterNUnit
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock));
       Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(TrackableEvent.EventType.Start));
       Assert.That(_context.TimeTracker.StartTime, Is.EqualTo(clock.Now));
-      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(1));
+      Assert.That(_context.TimeTracker.GetEvents().Count, Is.EqualTo(1));
 
       // Verify that the remote connection event is ignored
       TrackableEvent.EventType lastType = _context.TimeTracker.LastEvent.Type;
-      eventCount = _context.TimeTracker.Events.Count;
+      eventCount = _context.TimeTracker.GetEvents().Count;
       Console.WriteLine("Remote connection");
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.RemoteConnect));
       Assert.That(_context.TimeTracker.LastEvent.Type, Is.EqualTo(lastType));
-      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(eventCount));
+      Assert.That(_context.TimeTracker.GetEvents().Count, Is.EqualTo(eventCount));
     }
 
     /// <summary>
@@ -173,7 +173,7 @@ namespace TesterNUnit
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionLock));
       clock.Now = clock.Now.AddHours(1);
       _context.SessionEventOccurred(this, new SessionSwitchEventArgs(SessionSwitchReason.SessionUnlock));
-      int eventCount = _context.TimeTracker.Events.Count;
+      int eventCount = _context.TimeTracker.GetEvents().Count;
       Console.WriteLine("Exiting application at " + clock.Now +
                         ", " + eventCount + " events tracked");
       _context.Exit();
@@ -181,7 +181,7 @@ namespace TesterNUnit
       clock.Now = clock.Now.AddHours(1);
       Console.WriteLine("Restarting application at " + clock.Now);
       _context = new NotifyIconApplicationContext(clock, false);
-      Assert.That(_context.TimeTracker.Events.Count, Is.EqualTo(eventCount));
+      Assert.That(_context.TimeTracker.GetEvents().Count, Is.EqualTo(eventCount));
     }
 
     /// <summary>
@@ -208,13 +208,13 @@ namespace TesterNUnit
       Console.WriteLine(String.Format("Adding {0} after {1}", type, delay));
 
       // Add delay to last event time
-      int eventCount = tracker.Events.Count;
-      DateTime time = tracker.Events[eventCount - 1].Time.Add(delay);
+      int eventCount = tracker.GetEvents().Count;
+      DateTime time = tracker.GetEvents()[eventCount - 1].Time.Add(delay);
 
       // Add and verify the event
-      tracker.Events.Add(new TrackableEvent(type, time));
-      Assert.That(tracker.Events.Count, Is.EqualTo(++eventCount));
-      TrackableEvent lastEvent = tracker.Events[tracker.Events.Count - 1];
+      tracker.AddEvent(new TrackableEvent(type, time));
+      Assert.That(tracker.GetEvents().Count, Is.EqualTo(++eventCount));
+      TrackableEvent lastEvent = tracker.LastEvent;
       Assert.That(lastEvent.Type, Is.EqualTo(type));
       Assert.That(lastEvent.Time, Is.EqualTo(time));
     }

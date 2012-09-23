@@ -15,20 +15,19 @@ namespace ComputerTimeTracker
     public DateTime StartTime { get { return FirstEvent.Time; } }
 
     /// <summary>
-    /// Gets the events tracked by the tracker.
+    /// Events tracked by the tracker.
     /// </summary>
-    public IList<TrackableEvent> Events { get { return _events; } }
     private IList<TrackableEvent> _events;
 
     /// <summary>
     /// Gets the first event in the tracker.
     /// </summary>
-    public TrackableEvent FirstEvent { get { return Events[0]; } }
+    public TrackableEvent FirstEvent { get { return _events[0]; } }
 
     /// <summary>
     /// Gets the last event in the tracker.
     /// </summary>
-    public TrackableEvent LastEvent { get { return Events[Events.Count - 1]; } }
+    public TrackableEvent LastEvent { get { return _events[_events.Count - 1]; } }
 
     /// <summary>
     /// Gets all completed time periods between events tracked by the tracker.
@@ -40,7 +39,7 @@ namespace ComputerTimeTracker
       {
         IList<TimePeriod> periods = new List<TimePeriod>();
         TrackableEvent previousEvent = null;
-        foreach (TrackableEvent currentEvent in Events)
+        foreach (TrackableEvent currentEvent in _events)
         {
           if (previousEvent != null)
           {
@@ -87,6 +86,31 @@ namespace ComputerTimeTracker
     {
       _events = new List<TrackableEvent>();
       _events.Add(new TrackableEvent(TrackableEvent.EventType.Start, startTime));
+    }
+
+    /// <summary>
+    /// Gets a copy of the events tracked by the tracker.
+    /// </summary>
+    public IList<TrackableEvent> GetEvents()
+    {
+      return new List<TrackableEvent>(_events);
+    }
+
+    /// <summary>
+    /// Clears all tracked events.
+    /// </summary>
+    public void ClearEvents()
+    {
+      _events.Clear();
+    }
+
+    /// <summary>
+    /// Adds a trackable event to the time tracker.
+    /// </summary>
+    /// <param name="trackableEvent">Trackable event.</param>
+    public void AddEvent(TrackableEvent trackableEvent)
+    {
+      _events.Add(trackableEvent);
     }
 
     /// <summary>

@@ -72,7 +72,7 @@ namespace ComputerTimeTracker
       int top = _lblTextStart.Top;
       int labelCount = 0;
 
-      foreach (TrackableEvent trackableEvent in timeTracker.Events)
+      foreach (TrackableEvent trackableEvent in timeTracker.GetEvents())
       {
         Label timeLabel = new Label();
         timeLabel.AutoSize = true;
