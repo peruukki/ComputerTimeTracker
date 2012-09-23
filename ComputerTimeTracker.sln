@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerTimeTracker", "Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesterNUnit", "TesterNUnit\TesterNUnit.csproj", "{6C954E50-7228-40E2-BC56-13E7CE24C16F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesterExecutable", "TesterExecutable\TesterExecutable.csproj", "{B04705D7-6844-449A-ADAA-2F9BAB80E546}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{6C954E50-7228-40E2-BC56-13E7CE24C16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C954E50-7228-40E2-BC56-13E7CE24C16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C954E50-7228-40E2-BC56-13E7CE24C16F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B04705D7-6844-449A-ADAA-2F9BAB80E546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B04705D7-6844-449A-ADAA-2F9BAB80E546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B04705D7-6844-449A-ADAA-2F9BAB80E546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B04705D7-6844-449A-ADAA-2F9BAB80E546}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
