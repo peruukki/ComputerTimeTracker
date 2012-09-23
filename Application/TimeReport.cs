@@ -36,12 +36,25 @@ namespace ComputerTimeTracker
     private Color _lastPeriodPanelColor;
 
     /// <summary>
+    /// Time tracker instance.
+    /// </summary>
+    private readonly TimeTracker _timeTracker;
+
+    /// <summary>
+    /// The current time used in time span calculations.
+    /// </summary>
+    private DateTime _currentTime;
+
+    /// <summary>
     /// Creates a new TimeReport instance.
     /// </summary>
-    public TimeReport()
+    /// <param name="tracker">Time tracker instance.</param>
+    public TimeReport(TimeTracker timeTracker)
     {
       InitializeComponent();
       FormClosing += new FormClosingEventHandler(MainFormClosing);
+
+      _timeTracker = timeTracker;
 
       // The start labels are only used for helping in layout design
       _lblTimeStart.Visible = false;
@@ -64,15 +77,14 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Updates the labels that describe tracked events.
     /// </summary>
-    /// <param name="timeTracker">Time tracker.</param>
-    private void UpdateEventContent(TimeTracker timeTracker)
+    private void UpdateEventContent()
     {
       int timeLeft = _lblTimeStart.Left;
       int descriptionLeft = _lblTextStart.Left;
       int top = _lblTextStart.Top;
       int labelCount = 0;
 
-      foreach (TrackableEvent trackableEvent in timeTracker.GetEvents())
+      foreach (TrackableEvent trackableEvent in _timeTracker.GetEvents())
       {
         Label timeLabel = new Label();
         timeLabel.AutoSize = true;
@@ -99,9 +111,7 @@ namespace ComputerTimeTracker
     /// <summary>
     /// Updates the components that describe time periods between tracked events.
     /// </summary>
-    /// <param name="timeTracker">Time tracker.</param>
-    /// <param name="currentTime">Current time.</param>
-    private void UpdateTimePeriodContent(TimeTracker timeTracker, DateTime currentTime)
+    private void UpdateTimePeriodContent()
     {
       int panelLeft = _pnlPeriod1.Left;
       int panelTop = _pnlPeriod1.Top;
@@ -111,7 +121,7 @@ namespace ComputerTimeTracker
       int checkBoxTop = _chkPeriod1.Top;
       Size checkBoxSize = _chkPeriod1.Size;
 
-      foreach (TimePeriod period in timeTracker.GetPeriods(currentTime))
+      foreach (TimePeriod period in _timeTracker.GetPeriods(_currentTime))
       {
         Panel periodPanel = new Panel();
         periodPanel.Size = panelSize;
@@ -134,8 +144,9 @@ namespace ComputerTimeTracker
         CheckBox periodCheckBox = new CheckBox();
         periodCheckBox.Size = checkBoxSize;
         periodCheckBox.Location = new Point(checkBoxLeft, checkBoxTop);
-        periodCheckBox.Checked = true;
+        periodCheckBox.Checked = period.IsWorkTime;
         periodCheckBox.Tag = period;
+        periodCheckBox.CheckedChanged += new EventHandler(periodCheckBox_CheckedChanged);
         Controls.Add(periodCheckBox);
         _dynamicControls.Add(periodCheckBox);
 
@@ -145,15 +156,34 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
+    /// Occurs when the time period check box state as changed.
+    /// </summary>
+    /// <param name="sender">The changed check box instance.</param>
+    /// <param name="e">Ignored.</param>
+    private void periodCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+      CheckBox checkBox = sender as CheckBox;
+      TimePeriod period = checkBox.Tag as TimePeriod;
+
+      period.IsWorkTime = checkBox.Checked;
+      UpdateWorkTimeLabel();
+    }
+
+    /// <summary>
     /// Updates the labels that always appear in the form.
     /// </summary>
-    /// <param name="timeTracker">Time tracker.</param>
-    /// <param name="currentTime">Current time.</param>
-    private void UpdateStaticContent(TimeTracker timeTracker, DateTime currentTime)
+    private void UpdateStaticContent()
     {
-      _lblTimeCurrent.Text = currentTime.ToLongTimeString();
+      _lblTimeCurrent.Text = _currentTime.ToLongTimeString();
+      UpdateWorkTimeLabel();
+    }
 
-      TimeSpan workTime = timeTracker.GetWorkTime(currentTime);
+    /// <summary>
+    /// Updates the current work time label content.
+    /// </summary>
+    private void UpdateWorkTimeLabel()
+    {
+      TimeSpan workTime = _timeTracker.GetWorkTime(_currentTime);
       _lblTimeWork.Text = String.Format("{0:0#}:{1:0#}:{2:0#}",
                                         workTime.Hours, workTime.Minutes,
                                         workTime.Seconds);
@@ -196,7 +226,7 @@ namespace ComputerTimeTracker
       return _lastPeriodPanelColor;
     }
 
-    public void UpdateForm(TimeTracker timeTracker, Clock clock)
+    public void UpdateForm(Clock clock)
     {
       foreach (Control component in _dynamicControls)
       {
@@ -204,10 +234,10 @@ namespace ComputerTimeTracker
       }
       _dynamicControls.Clear();
 
-      DateTime now = clock.Now;
-      UpdateEventContent(timeTracker);
-      UpdateTimePeriodContent(timeTracker, now);
-      UpdateStaticContent(timeTracker, now);
+      _currentTime = clock.Now;
+      UpdateEventContent();
+      UpdateTimePeriodContent();
+      UpdateStaticContent();
     }
 
     public void MainFormClosing(object sender, FormClosingEventArgs e)

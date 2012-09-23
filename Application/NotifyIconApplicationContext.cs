@@ -48,11 +48,11 @@ namespace ComputerTimeTracker
     public NotifyIconApplicationContext(Clock clock, bool forceUpdateStartTime)
     {
       UpdateTimeTrackerStartTime(clock.Now, forceUpdateStartTime);
-      _reportForm = new TimeReport();
+      RestoreSettings();
+
+      _reportForm = new TimeReport(_timeTracker);
       _components = new Container();
       _clock = clock;
-
-      RestoreSettings();
 
       _notifyIcon = CreateNotifyIcon(_components);
       _notifyIcon.ContextMenu = CreateNotifyIconContextMenu();
@@ -208,7 +208,7 @@ namespace ComputerTimeTracker
     /// <param name="e">Ignored.</param>
     public void ShowReport(object Sender, EventArgs e)
     {
-      _reportForm.UpdateForm(_timeTracker, _clock);
+      _reportForm.UpdateForm(_clock);
       _reportForm.Show();
       _reportForm.Activate();
     }

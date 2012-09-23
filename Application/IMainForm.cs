@@ -41,11 +41,10 @@ namespace ComputerTimeTracker
     Color GetLastPeriodPanelColor();
 
     /// <summary>
-    /// Updates the main form based on the given time tracker state.
+    /// Updates the main form based on its current time tracker state.
     /// </summary>
-    /// <param name="timeTracker">Time tracker.</param>
     /// <param name="clock">The clock to use for getting the current time.</param>
-    void UpdateForm(TimeTracker timeTracker, Clock clock);
+    void UpdateForm(Clock clock);
 
     /// <summary>
     /// Called before the main form is closed.
