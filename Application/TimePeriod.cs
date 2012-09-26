@@ -32,10 +32,10 @@ namespace ComputerTimeTracker
     private readonly PeriodType _type;
 
     /// <summary>
-    /// Gets the duration of the period.
+    /// Gets or sets the duration of the period.
     /// </summary>
-    public TimeSpan Duration { get { return _duration; } }
-    private readonly TimeSpan _duration;
+    public TimeSpan Duration { get { return _duration; } set { _duration = value; } }
+    private TimeSpan _duration;
 
     /// <summary>
     /// Gets or sets the value that tells if the period is considered work time.
@@ -63,13 +63,21 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
-    /// Creates a new time period.
+    /// Creates a new time period with no duration.
+    /// </summary>
+    public TimePeriod(PeriodType type)
+    {
+      _type = type;
+    }
+
+    /// <summary>
+    /// Creates a new time period with the given duration.
     /// </summary>
     /// <param name="type">Period type.</param>
     /// <param name="duration">Period duration.</param>
     public TimePeriod(PeriodType type, TimeSpan duration)
+      : this(type)
     {
-      _type = type;
       _duration = duration;
     }
   }

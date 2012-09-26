@@ -364,5 +364,24 @@ namespace TesterNUnit
       periods[index].IsWorkTime = true;
       return workTime.Add(periods[index].Duration);
     }
+
+    /// <summary>
+    /// Verifies that the last, non-completed time period always has the correct duration.
+    /// </summary>
+    [Test]
+    public void CheckNonCompletedPeriodDuration()
+    {
+      Clock clock = new CustomClock(DateTime.Now);
+      _context = new NotifyIconApplicationContext(clock, true);
+      DateTime startTime = clock.Now;
+
+      TimeSpan duration = new TimeSpan(1, 1, 1);
+      Assert.That(_context.TimeTracker.GetPeriods(startTime.Add(duration))[0].Duration,
+                  Is.EqualTo(duration));
+
+      duration = duration.Add(new TimeSpan(1, 1, 1));
+      Assert.That(_context.TimeTracker.GetPeriods(startTime.Add(duration))[0].Duration,
+                  Is.EqualTo(duration));
+    }
   }
 }

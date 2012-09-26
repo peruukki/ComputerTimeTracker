@@ -142,9 +142,9 @@ namespace ComputerTimeTracker
       IList<TimePeriod> periods = new List<TimePeriod>(_completedPeriods);
       if (_currentTimePeriod == null)
       {
-        _currentTimePeriod = new TimePeriod(GetPeriodTypeFromEvent(LastEvent.Activity),
-                                            GetPeriodDuration(LastEvent.Time, currentTime));
+        _currentTimePeriod = new TimePeriod(GetPeriodTypeFromEvent(LastEvent.Activity));
       }
+      _currentTimePeriod.Duration = GetPeriodDuration(LastEvent.Time, currentTime);
       periods.Add(_currentTimePeriod);
       return periods;
     }
