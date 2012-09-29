@@ -83,13 +83,15 @@ namespace ComputerTimeTracker
     }
 
     /// <summary>
-    /// Clears all tracked events and sets a new start event.
+    /// Clears all tracked events and periods and sets a new start event.
     /// <param name="startEvent">The new start event.</param>
     /// </summary>
-    public void ClearEvents(TrackableEvent startEvent)
+    public void ClearTrackedState(TrackableEvent startEvent)
     {
       _events.Clear();
       _events.Add(startEvent);
+      _completedPeriods.Clear();
+      _currentTimePeriod = null;
     }
 
     /// <summary>

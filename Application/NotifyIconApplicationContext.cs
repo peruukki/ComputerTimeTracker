@@ -83,27 +83,26 @@ namespace ComputerTimeTracker
           return;
       }
 
-      AddEvent(_timeTracker, new TrackableEvent(eventType, _clock.Now));
+      AddEvent(new TrackableEvent(eventType, _clock.Now));
     }
 
     /// <summary>
     /// Adds an event to the time tracker and resets the tracker state if appropriate.
     /// </summary>
-    /// <param name="tracker">Time tracker to update.</param>
     /// <param name="trackableEvent">Event to add.</param>
-    private void AddEvent(TimeTracker tracker, TrackableEvent trackableEvent)
+    public void AddEvent(TrackableEvent trackableEvent)
     {
-      if ((trackableEvent.Time.DayOfYear != tracker.FirstEvent.Time.DayOfYear) &&
+      if ((trackableEvent.Time.DayOfYear != _timeTracker.FirstEvent.Time.DayOfYear) &&
           (trackableEvent.Type == TrackableEvent.EventType.Unlock))
       {
         // The new event starts a new work day
-        tracker.ClearEvents(new TrackableEvent(TrackableEvent.EventType.Start,
-                                               trackableEvent.Time));
+        _timeTracker.ClearTrackedState(new TrackableEvent(TrackableEvent.EventType.Start,
+                                                          trackableEvent.Time));
       }
       else
       {
         // Add event normally
-        tracker.AddEvent(trackableEvent);
+        _timeTracker.AddEvent(trackableEvent);
       }
 
       SaveSettings();

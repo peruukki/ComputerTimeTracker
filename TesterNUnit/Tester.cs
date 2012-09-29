@@ -383,5 +383,34 @@ namespace TesterNUnit
       Assert.That(_context.TimeTracker.GetPeriods(startTime.Add(duration))[0].Duration,
                   Is.EqualTo(duration));
     }
+
+    /// <summary>
+    /// Checks that the time tracker events and periods are correct when the day changes.
+    /// </summary>
+    [Test]
+    public void CheckTrackedStateAfterDayChange()
+    {
+      // Run the application, forcing the start time to be updated
+      CustomClock clock = new CustomClock(new DateTime(2012, 1, 1, 1, 1, 1));
+      Console.WriteLine("Launching application at " + clock.Now);
+      _context = new NotifyIconApplicationContext(clock, true);
+      TimeTracker tracker = _context.TimeTracker;
+
+      // Add some events on the same day
+      clock.Now = clock.Now.AddMinutes(1);
+      tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Lock, clock.Now));
+      clock.Now = clock.Now.AddMinutes(1);
+      tracker.AddEvent(new TrackableEvent(TrackableEvent.EventType.Unlock, clock.Now));
+
+      // Add some events the next day
+      clock.Now = clock.Now.AddDays(1);
+      Console.WriteLine("Adding unlock event the next day at " + clock.Now);
+      _context.AddEvent(new TrackableEvent(TrackableEvent.EventType.Unlock, clock.Now));
+      clock.Now = clock.Now.AddSeconds(1);
+
+      Assert.That(tracker.GetEvents().Count, Is.EqualTo(1));
+      Assert.That(tracker.GetPeriods(clock.Now).Count, Is.EqualTo(1));
+      Assert.That(tracker.LastCompletedTimePeriod, Is.EqualTo(null));
+    }
   }
 }
